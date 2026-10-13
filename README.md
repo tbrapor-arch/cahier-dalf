@@ -1,6 +1,6 @@
 # Cahier DALF C1·C2
 
-Application web pour préparer le DALF C1 et C2 : 190 structures clés, 1 360 mots et expressions en 27 thèmes, 14 textes d'écoute avec transcription synchronisée, quiz, méthode de l'écrit et examen blanc au format officiel.
+Application web pour préparer le DALF C1 et C2 : 202 structures clés, 1 390 mots et expressions en 28 thèmes, 14 textes d'écoute avec transcription synchronisée, quiz, méthode de l'écrit et examen blanc au format officiel.
 
 **Ouvrir l'app :** https://tbrapor-arch.github.io/cahier-dalf/
 
