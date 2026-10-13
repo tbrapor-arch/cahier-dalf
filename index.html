@@ -170,6 +170,16 @@ details summary{cursor:pointer;color:var(--encre);font-weight:700;font-size:.9re
 .btn.mk{padding:5px 10px;font-size:.82rem}
 .btn.mk.good{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
 .btn.mk.bad{border-color:var(--marge);color:var(--marge)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+.tools{display:flex;gap:8px;align-items:center;margin-left:auto}
+.itoggle,.ltoggle{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--sheet)}
+.itoggle button,.ltoggle button{border:0;background:none;color:var(--muted);cursor:pointer;display:grid;place-items:center;padding:0}
+.itoggle button{width:34px;height:30px}
+.itoggle svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+.ltoggle button{height:30px;padding:0 9px;font:500 .72rem var(--f-mono);letter-spacing:.04em}
+.itoggle button[aria-pressed="true"],.ltoggle button[aria-pressed="true"]{background:var(--encre-soft);color:var(--encre)}
+.itoggle button+button,.ltoggle button+button{border-left:1px solid var(--rule)}
+.itoggle button:focus-visible,.ltoggle button:focus-visible{outline:2px solid var(--encre);outline-offset:-2px}
 .chip-btn{border:0;cursor:pointer;font:500 .68rem var(--f-mono);letter-spacing:.06em}
 .chip-btn span{margin-left:2px}
 .chip-btn:focus-visible,.more-link:focus-visible{outline:2px solid var(--encre);outline-offset:2px}
@@ -2118,16 +2128,20 @@ function renderStructures(){
   const nEss = byLevel(DATA.structures).filter(s=>s.ess).length;
   const sel = `<label class="filter" for="theme-s"><span class="eyebrow">Thème</span>
     <select id="theme-s"><option value="all">Tous les thèmes</option><option value="ess" ${ESS?"selected":""}>★ Essentielles (${nEss})</option>${themesOf(DATA.structures).map(t=>`<option ${t===state.themeS?"selected":""}>${t}</option>`).join("")}</select></label>`;
-  const modes = `<div class="row" role="group" aria-label="Affichage">${[["fiches","Fiches"],["quiz","Quiz"],["gram","Grammaire"]].map(([k,l])=>`<button class="btn" data-smode="${k}" style="padding:6px 12px;${state.smode===k?'border-color:var(--encre);color:var(--encre)':''}">${l}</button>`).join("")}</div>`;
-  const compactBtn = state.smode==="fiches" ? `<button class="btn" id="s-compact" aria-pressed="${state.scompact}" style="padding:6px 12px;${state.scompact?'border-color:var(--encre);color:var(--encre)':''}">${state.scompact?"Vue compacte ✓":"Vue compacte"}</button>` : "";
-  const head = `<h2>Structures clés</h2><p class="sub">${items.length} tournures${ESS?" essentielles, à savoir placer à l'écrit et à l'oral":" C1·C2, classées par fonction. ★ = à maîtriser en priorité"}.</p>
-  <div class="row" style="margin-bottom:12px;align-items:flex-end">${sel}${modes}${compactBtn}
-    <div class="row" role="group" aria-label="Langue des explications" style="gap:0">${[["fr","FR"],["en","EN"]].map(([k,l],n)=>`<button class="btn" data-lang="${k}" aria-pressed="${state.lang===k}" style="padding:6px 10px;${n?'border-radius:0 8px 8px 0;margin-left:-1px':'border-radius:8px 0 0 8px'};${state.lang===k?'background:var(--encre);border-color:var(--encre);color:var(--sheet)':''}">${l}</button>`).join("")}</div></div>`;
+  const modes = `<div class="subtabs" role="tablist" aria-label="Mode">${[["fiches","Fiches"],["quiz","Quiz"],["gram","Grammaire"]].map(([k,l])=>`<button role="tab" data-smode="${k}" aria-selected="${state.smode===k}">${l}</button>`).join("")}</div>`;
+  const ICL = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/></svg>';
+  const ILI = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="5" cy="6" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="18" r="1"/></svg>';
+  const viewTgl = state.smode==="fiches" ? `<div class="itoggle" role="group" aria-label="Affichage des fiches"><button id="s-cards" aria-pressed="${!state.scompact}" aria-label="Fiches détaillées" title="Fiches détaillées">${ICL}</button><button id="s-compact" aria-pressed="${state.scompact}" aria-label="Vue compacte" title="Vue compacte">${ILI}</button></div>` : "";
+  const langTgl = state.smode!=="gram" ? `<div class="ltoggle" role="group" aria-label="Langue des explications">${[["fr","FR"],["en","EN"]].map(([k,l])=>`<button data-lang="${k}" aria-pressed="${state.lang===k}">${l}</button>`).join("")}</div>` : "";
+  const head = `<h2>Structures clés</h2>${modes}
+  ${state.smode!=="gram"?sel:""}
+  <div class="toolbar"><p class="sub" style="margin:0">${state.smode==="gram"?`${DATA.grammaire.length} questions : modes, relatifs, accords, inversions, cohésion.`:`${items.length} tournures${ESS?" essentielles":""} · ★ = prioritaire`}</p><div class="tools">${langTgl}${viewTgl}</div></div>`;
   const bind = () => {
-    document.getElementById("theme-s").onchange=e=>{ state.themeS=e.target.value; state.squiz=null; renderStructures(); };
+    const ts=document.getElementById("theme-s"); if(ts) ts.onchange=e=>{ state.themeS=e.target.value; state.squiz=null; renderStructures(); };
     view.querySelectorAll("[data-smode]").forEach(b=>b.onclick=()=>{ state.smode=b.dataset.smode; renderStructures(); });
     view.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{ state.lang=b.dataset.lang; store.set("lang",state.lang); renderStructures(); });
-    const c=document.getElementById("s-compact"); if(c) c.onclick=()=>{ state.scompact=!state.scompact; store.set("scompact",state.scompact); renderStructures(); };
+    const c=document.getElementById("s-compact"); if(c) c.onclick=()=>{ state.scompact=true; store.set("scompact",true); renderStructures(); };
+    const cd=document.getElementById("s-cards"); if(cd) cd.onclick=()=>{ state.scompact=false; store.set("scompact",false); renderStructures(); };
   };
   if(state.smode==="quiz"){ renderSQuiz(head, items, bind); return; }
   if(state.smode==="gram"){ renderGram(head, bind); return; }
@@ -2174,7 +2188,7 @@ function bindMore(){
 function renderGram(head, bind){
   if(!state.gram || state.gram.len!==state.glen) state.gram = { len:state.glen, qs:shuffle(DATA.grammaire).slice(0,state.glen), i:0, score:0, picked:null, missed:[] };
   const G=state.gram, lens=`<div class="row" role="group" aria-label="Nombre de questions" style="margin-bottom:10px"><span class="eyebrow">Questions</span>${[10,20,40].map(n=>`<button class="btn" data-glen="${n}" style="padding:4px 10px;${state.glen===n?'border-color:var(--encre);color:var(--encre)':''}">${n}</button>`).join("")}</div>`;
-  const intro=`<p class="note" style="margin:0 0 10px">Les points de grammaire attendus au DALF C1 : modes, relatifs, accords, inversions, cohésion du texte.</p>`;
+  const intro="";
   const bindG=()=>{ bind(); view.querySelectorAll("[data-glen]").forEach(b=>b.onclick=()=>{ state.glen=+b.dataset.glen; state.gram=null; renderStructures(); }); };
   if(G.i>=G.qs.length){
     const pts=[...new Set(G.missed.map(q=>q.pt))];
