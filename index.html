@@ -133,6 +133,43 @@ details summary{cursor:pointer;color:var(--encre);font-weight:700;font-size:.9re
 .types{margin:0;display:grid;gap:8px}
 .types dt{font-weight:700}
 .types dd{margin:0;color:var(--muted);font-size:.92rem}
+.subtabs{display:flex;background:var(--rule);border-radius:10px;padding:3px;margin:0 0 16px;gap:2px}
+.subtabs button{flex:1;border:0;background:none;border-radius:8px;padding:8px 4px;font:700 .85rem var(--f-body);color:var(--muted);cursor:pointer}
+.subtabs button[aria-selected="true"]{background:var(--sheet);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.subtabs button:focus-visible{outline:2px solid var(--encre);outline-offset:1px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.stats>div{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:2px}
+.stats b{font:400 1.4rem var(--f-display);font-variant-numeric:tabular-nums}
+.tcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tcard{display:grid;gap:4px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--sheet);color:var(--ink);cursor:pointer;font:inherit}
+.tcard:hover{border-color:var(--encre)}
+.tcard:focus-visible,.stile:focus-visible{outline:2px solid var(--encre);outline-offset:2px}
+.tcard b{font:400 1.05rem var(--f-display)}
+.tcard small{color:var(--muted);font-size:.8rem}
+.tcard .progress{min-width:0;margin-top:4px}
+.ico{width:22px;height:22px;stroke:var(--encre);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sl-title{display:flex;align-items:center;gap:8px;font:400 1.25rem var(--f-display);margin:0 0 4px}
+.stiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.stile{aspect-ratio:1;border:1px solid var(--line);border-radius:10px;background:var(--sheet);color:var(--ink);font:400 1.05rem var(--f-display);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:0;font-variant-numeric:tabular-nums}
+.stile small{font:500 .62rem var(--f-mono);margin-top:2px}
+.stile.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.stile.go{background:var(--encre-soft);border-color:var(--encre);color:var(--encre)}
+.runhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 8px}
+.runhead .more-link{margin:0}
+.player2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0}
+.stopb{width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}
+.stopb svg{width:14px;height:14px;fill:currentColor}
+.wbox{width:100%;box-sizing:border-box;font:16px/1.6 var(--f-body);padding:10px;border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--ink);resize:vertical}
+.eprow{background:var(--sheet);border:1px solid var(--line);border-radius:8px}
+.eprow summary{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 14px;cursor:pointer}
+.eprow summary b{font:400 1.02rem var(--f-display)}
+.eprow[open] summary{border-bottom:1px solid var(--line)}
+.epbody{padding:12px 14px 14px}
+.miss{margin:0;padding-left:18px;display:grid;gap:8px}
+.lq{padding-left:20px;margin:10px 0 0;display:grid;gap:8px}
+.btn.mk{padding:5px 10px;font-size:.82rem}
+.btn.mk.good{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.btn.mk.bad{border-color:var(--marge);color:var(--marge)}
 .chip-btn{border:0;cursor:pointer;font:500 .68rem var(--f-mono);letter-spacing:.06em}
 .chip-btn span{margin-left:2px}
 .chip-btn:focus-visible,.more-link:focus-visible{outline:2px solid var(--encre);outline-offset:2px}
@@ -1963,6 +2000,7 @@ const DATA = {
     ],
     c2: {"epreuves": [{"name": "Compréhension et production orales", "pts": 50, "desc": "Écoute d'un document enregistré (2 écoutes), 1 h de préparation, puis compte rendu, argumentation et débat avec le jury (30 min)."}, {"name": "Compréhension et production écrites", "pts": 50, "desc": "Dossier de documents d'environ 2 000 mots, puis rédaction d'un texte structuré d'au moins 700 mots (3 h 30)."}], "sujets": ["Rédigez un éditorial pour un quotidien national : « Faut-il encore croire au progrès technique ? »", "Vous êtes chargé(e) de mission dans une collectivité. Rédigez un rapport au conseil régional sur l'opportunité de rendre les transports en commun gratuits.", "Rédigez le discours que vous prononcerez à l'ouverture d'un colloque sur l'avenir des langues régionales.", "Rédigez un article pour une revue de société : le télétravail a-t-il changé notre rapport au temps et à l'espace ?", "Rédigez une lettre ouverte au ministre de la Culture sur la place des écrans dans l'accès des jeunes à la culture.", "Rédigez un éditorial : « L'intelligence artificielle menace-t-elle la création artistique ? »", "Rédigez un rapport destiné au conseil d'administration d'une université sur la suppression des notes en première année.", "Rédigez un article pour un magazine de vulgarisation : la conquête spatiale privée est-elle une chance ou un danger ?"]},
     methode: {"synthese": {"label": "Synthèse", "temps": "≈ 1 h 30 (lecture 45 min + rédaction 45 min) · 200 à 240 mots · 12,5 points", "steps": [["Planifier", ["Lisez tous les documents une première fois, sans noter, pour trouver le thème commun.", "Formulez la problématique : la question à laquelle les documents répondent ensemble.", "Relevez les idées essentielles en notes, dans un tableau avec une colonne par document. Laissez de côté les exemples secondaires.", "Un tableau pratique : une ligne par idée du premier document, et pour chaque autre document trois colonnes : idée commune, idée opposée, idée nouvelle.", "Comparez : quelles idées se répètent, se complètent, s'opposent ou se nuancent ?", "Construisez un plan en 2 ou 3 parties à partir de ces regroupements, jamais dans l'ordre des documents.", "Fixez un budget de mots : environ 40 pour l'introduction, 90 à 100 par partie."]], ["Rédiger", ["Ajoutez un titre si la consigne le demande.", "Introduction courte : le thème, les documents en une phrase, la problématique. La conclusion n'est pas obligatoire.", "Un paragraphe par idée essentielle, une ligne vide entre les parties.", "Reformulez tout : nouveaux mots, nouvelle construction de phrase. Gardez seulement les mots-clés sans synonyme.", "Attribuez les idées à leur source (selon, d'après, l'auteur souligne…) et confrontez les documents dans la même phrase.", "Aucune opinion personnelle, aucune idée qui ne soit pas dans les documents.", "La conclusion est facultative. Si vous en faites une, deux phrases qui reprennent l'idée directrice suffisent."]], ["Réviser", ["Comptez les mots : entre 200 et 240. Hors de la fourchette, la note baisse.", "Vérifiez qu'aucun groupe de mots n'est recopié des documents.", "Vérifiez que les documents sont croisés, pas résumés l'un après l'autre.", "Relisez l'orthographe, les accords et la ponctuation."]]], "check": ["200 à 240 mots", "Problématique dans l'introduction", "Plan personnel, pas l'ordre des documents", "Documents confrontés", "Tout est reformulé", "Aucune opinion personnelle", "Orthographe et accords relus"]}, "essai": {"label": "Essai argumenté", "temps": "≈ 45 min à 1 h · 250 mots minimum · 12,5 points (gardez 10 min pour relire les deux textes)", "steps": [["Planifier", ["Analysez la consigne : qui écrivez-vous, à qui, quel type de texte, dans quel but ?", "Quatre positions possibles : adhérer à la thèse des documents, la contester, confronter le pour et le contre, ou l'accepter en concédant certains points.", "Prenez position clairement, en restant nuancé.", "Cherchez des arguments et surtout des exemples précis, tirés de votre expérience. Vous pouvez reprendre quelques éléments des documents.", "Plan en 2 ou 3 parties, 2 ou 3 arguments par partie. Peu d'arguments, mais bien développés."]], ["Rédiger", ["Respectez la mise en page du type de texte demandé (voir ci-dessous).", "Introduction : le contexte, le problème, votre position, l'annonce du plan.", "Chaque argument : une idée, une explication, un exemple.", "Reliez les arguments par des connecteurs variés et marquez les transitions entre les parties.", "Évitez les répétitions : reprenez les idées par des synonymes ou des pronoms.", "Conclusion : le bilan de votre position, puis une ouverture ou une demande (pour une lettre)."]], ["Réviser", ["Comptez les mots : au moins 250 (une tolérance d'environ 10 % existe, mais ne comptez pas dessus).", "Le destinataire et le registre sont-ils respectés du début à la fin ?", "Variez les phrases : subordonnées, relatives, mises en relief.", "Relisez les erreurs fréquentes : accords, subjonctif, prépositions."]]], "check": ["250 mots ou plus", "Type de texte et destinataire respectés", "Position claire et nuancée", "Chaque argument a un exemple", "Connecteurs variés et transitions", "Conclusion avec ouverture ou demande", "Pas de répétitions"]}, "types": [["Lettre ouverte / formelle", "Lieu et date, objet, formule d'appel (« Monsieur le Maire, »), introduction qui dit pourquoi on écrit, formule de politesse finale qui reprend l'appel, signature."], ["Article de presse", "Un titre accrocheur, éventuellement un chapeau (deux lignes de résumé), puis un développement en paragraphes. Pas de « je » excessif."], ["Contribution à un forum", "Un titre ou une réponse à un message, une adresse directe aux autres participants, un ton engagé mais respectueux, un pseudonyme en signature."], ["Courrier des lecteurs", "Adressé au journal, il réagit à un article précis : rappelez-le en introduction, puis donnez votre point de vue."]], "co": {"label": "Compréhension de l'oral", "temps": "≈ 40 min · 25 points", "steps": [["Avant l'écoute", ["Lisez toutes les questions pendant le temps prévu : elles donnent le thème et le plan du document.", "Soulignez les mots-clés de chaque question (qui, pourquoi, quelle conséquence…).", "Préparez la colonne de brouillon : une ligne par question.", "Repérez le type de chaque question (choix multiple, vrai / faux, réponse à rédiger) : cela vous dit quoi écouter."]], ["Pendant l'écoute", ["Première écoute du document long : notez des mots, pas des phrases. Repérez la structure et l'opinion de chaque intervenant.", "Les questions suivent en général l'ordre du document.", "Documents courts : une seule écoute, alors concentrez-vous sur les questions précises (chiffres, attitude, but du message).", "Première écoute : répondez au crayon, puis confirmez à l'encre pendant la pause. Le jour de l'examen, seules les réponses à l'encre sont corrigées.", "Si une question vous bloque, passez à la suivante sans vous arrêter.", "Deuxième écoute : concentrez-vous sur les questions restées sans réponse."]], ["Après l'écoute", ["Répondez en phrases courtes et complètes. L'orthographe n'est pas notée si la réponse reste compréhensible.", "Reformulez avec vos mots : la réponse doit montrer que vous avez compris, pas recopier un mot entendu.", "Ne laissez aucune case vide : une réponse partielle peut rapporter des points."]]], "check": ["Toutes les questions lues avant l'écoute", "Chaque réponse est une phrase claire", "Aucune case vide", "Les chiffres et les noms sont notés"]}, "ce": {"label": "Compréhension des écrits", "temps": "≈ 50 min · 25 points", "steps": [["Survoler", ["Lisez le titre, le chapeau, la source et la date : ils annoncent le thème et le point de vue.", "Lisez les questions avant le texte pour savoir quoi chercher.", "Identifiez le type de texte : article d'opinion, reportage, essai, entretien."]], ["Lire en profondeur", ["Repérez l'idée principale de chaque paragraphe et notez-la dans la marge.", "Distinguez l'idée essentielle, l'exemple et l'opinion de l'auteur.", "Repérez les connecteurs : ils montrent l'enchaînement des idées (cause, opposition, concession)."]], ["Répondre", ["Vrai / faux : la justification doit citer exactement la phrase du texte, sinon la réponse vaut 0.", "Questions « avec vos propres mots » : ne recopiez jamais le texte, reformulez.", "Vocabulaire en contexte : relisez la phrase entière avant de choisir le sens."]]], "check": ["Chaque vrai / faux a sa citation exacte", "Les reformulations ne recopient pas le texte", "Toutes les questions ont une réponse"]}, "po": {"label": "Production orale", "temps": "1 h de préparation · 30 min · 25 points", "steps": [["Préparer (1 h)", ["Répartissez l'heure : environ 35 min de lecture, 15 min pour le plan, 10 min pour prévoir les questions et objections du jury.", "Lisez les documents et dégagez le thème et une problématique.", "Construisez un plan en 2 ou 3 parties, avec 3 ou 4 idées principales en tout.", "Ajoutez vos propres idées et exemples : l'exposé n'est pas un résumé des documents.", "Notez des mots-clés, pas un texte rédigé : vous ne devez pas lire."]], ["Exposé (8 à 10 min)", ["Introduction : une accroche, le thème, la problématique, l'annonce du plan.", "Développez chaque partie avec des exemples, et marquez les transitions.", "Conclusion : une réponse nuancée à la problématique, puis une ouverture.", "Regardez le jury, parlez à un rythme posé.", "Choisissez votre ton (prudent, neutre ou engagé) et gardez-le du début à la fin."]], ["Débat (15 à 20 min)", ["Écoutez la question jusqu'au bout, reformulez-la si besoin.", "Défendez votre position avec des arguments, nuancez sans vous contredire.", "Vous pouvez être en désaccord avec le jury, poliment et avec des arguments.", "Si vous ne savez pas, dites-le et proposez une piste de réflexion.", "Adaptez votre intonation : posée pour nuancer, ferme pour affirmer une certitude."]]], "check": ["Problématique claire", "Plan annoncé", "Idées personnelles en plus des documents", "Notes en mots-clés, pas de lecture", "Conclusion avec ouverture"]}, "c2oral": {"label": "Compréhension et production orales", "temps": "1 h de préparation · 30 min · 50 points", "steps": [["Écouter et préparer (1 h)", ["Le document sonore est écouté deux fois : notez sa structure, les idées principales et la position de chaque intervenant.", "Préparez d'abord un compte rendu fidèle et organisé du document.", "Dégagez une problématique et construisez votre propre argumentation sur le sujet."]], ["Monologue", ["Présentez le compte rendu : le thème, les idées essentielles, les points de vue, sans les lister dans l'ordre chronologique.", "Enchaînez sur votre argumentation : position claire, arguments hiérarchisés, exemples variés.", "Soignez les transitions : au C2, l'auditeur doit suivre sans effort."]], ["Débat", ["Le jury discute votre position et peut vous contredire.", "Argumentez avec souplesse : nuancez, concédez, reformulez.", "Montrez la richesse et la précision de votre langue, sans artifice."]]], "check": ["Compte rendu fidèle et organisé", "Position personnelle claire", "Transitions nettes", "Exemples précis et variés"]}, "c2ecrit": {"label": "Compréhension et production écrites", "temps": "3 h 30 · au moins 700 mots · 50 points", "steps": [["Comprendre le dossier", ["Lisez le dossier de documents (environ 2 000 mots) et dégagez le plan et l'enchaînement des idées de chacun.", "Sélectionnez seulement les informations utiles à la position que vous allez défendre.", "Lisez attentivement la consigne : genre de texte (article, éditorial, rapport, discours, lettre), destinataire, objectif."]], ["Construire", ["Choisissez une ligne directrice claire et tenez-la jusqu'au bout.", "Plan en 2 ou 3 grandes parties, chacune avec plusieurs arguments.", "Mêlez les informations du dossier et vos propres connaissances et réflexions."]], ["Rédiger et réviser", ["Respectez les codes du genre demandé (titre, chapeau, intertitres, formules).", "Adoptez un ton engagé et un registre adapté au destinataire.", "Comptez les mots : au moins 700.", "Gardez 20 minutes pour relire la langue : accords, subjonctif, ponctuation."]]], "check": ["Au moins 700 mots", "Genre et destinataire respectés", "Ligne directrice tenue du début à la fin", "Dossier exploité et idées personnelles", "Relecture de la langue faite"]}},
+    sujetsOral: ["Les réseaux sociaux rapprochent-ils ou isolent-ils les individus ?", "Faut-il limiter l'accès aux sites touristiques les plus visités ?", "L'école doit-elle renoncer aux notes ?", "La gratuité des transports publics est-elle une bonne idée ?", "Le télétravail est-il un progrès pour les salariés ?", "Faut-il encore apprendre des langues à l'heure de la traduction automatique ?", "Faut-il manger moins de viande pour préserver la planète ?", "La culture doit-elle être gratuite ?", "Les robots peuvent-ils prendre soin des personnes âgées ?", "Faut-il rendre le vote obligatoire ?"],
     sujetsEssai: ["Votre ville veut interdire les voitures dans le centre. Vous écrivez au maire une lettre ouverte pour donner votre avis.", "Le lycée de votre quartier envisage d'interdire totalement le téléphone portable. Vous écrivez un article pour le journal de l'établissement.", "Un magazine lance un débat : « Faut-il instaurer une journée sans viande dans les cantines ? ». Vous participez au forum en ligne du magazine.", "Votre entreprise propose de passer à la semaine de quatre jours. Vous écrivez au directeur des ressources humaines pour défendre votre position.", "Un journal publie une tribune affirmant que le tourisme de masse doit être limité par des quotas. Vous rédigez un courrier des lecteurs.", "Votre commune veut fermer la dernière librairie indépendante pour construire un parking. Vous écrivez une lettre ouverte au conseil municipal.", "Un site d'information demande : « L'intelligence artificielle doit-elle entrer dans les écoles ? ». Vous rédigez une contribution argumentée.", "Le gouvernement envisage de rendre le service civique obligatoire pour les 18-25 ans. Vous écrivez à votre député pour donner votre avis.", "Un magazine consacre un dossier aux dépenses publiques pour la conquête spatiale. Vous rédigez un article : cet argent serait-il mieux utilisé ailleurs ?", "Votre université veut supprimer les cours de langues régionales faute de budget. Vous écrivez au président de l'université.", "Un forum de parents débat : « Faut-il limiter le temps d'écran des enfants par la loi ? ». Vous donnez votre point de vue.", "Une grande enseigne de votre ville organise un « Black Friday » géant. Vous écrivez un article pour un blog de consommation responsable.", "Votre mairie propose d'installer des jardins partagés à la place d'un terrain vague. Vous écrivez au maire pour soutenir ou critiquer le projet.", "Un journal titre : « Les jeunes ne veulent plus travailler ». Vous réagissez dans un courrier des lecteurs.", "Votre association de quartier envisage de créer une colocation entre étudiants et personnes âgées. Vous écrivez un article pour le bulletin du quartier.", "Le ministère propose de rendre la réparation des objets électroniques moins chère par une aide de l'État. Vous participez à une consultation publique en ligne."],
     ecrit: {
       synthese: { label:"Synthèse", min:200, max:240,
@@ -2060,7 +2098,7 @@ const store = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d }catch(e){ return d } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} }
 };
-let state = { tab: store.get("tab","structures"), level: store.get("level","all"), known: store.get("known",{}), card:0, flipped:false, rate:0.9, heard:false, checked:false, answers:{}, pe:"synthese", themeS:"all", vhome:true, mopen:null, exlvl: store.get("exlvl","C1"), c2i: store.get("c2i",0), checks: store.get("checks",{}), sujetI: store.get("sujetI",0), lang: store.get("lang","fr"), follow: store.get("follow",true), smode:"fiches", gram:null, glen:20, scompact: store.get("scompact",false), squiz:null, qlen:10, themeV:"all", vmode:"cartes", onlyReview:false, playing:null, drafts: store.get("drafts",{}) };
+let state = { tab: store.get("tab","structures"), level: store.get("level","all"), known: store.get("known",{}), card:0, flipped:false, rate:0.9, heard:false, checked:false, answers:{}, pe:"synthese", themeS:"all", vhome:true, exsub: store.get("exsub","train"), exType:null, exRun:null, prog: store.get("prog",{}), paused:null, blancOpen:null, oralI: store.get("oralI",0), c2oi: store.get("c2oi",0), mopen:null, exlvl: store.get("exlvl","C1"), c2i: store.get("c2i",0), checks: store.get("checks",{}), sujetI: store.get("sujetI",0), lang: store.get("lang","fr"), follow: store.get("follow",true), smode:"fiches", gram:null, glen:20, scompact: store.get("scompact",false), squiz:null, qlen:10, themeV:"all", vmode:"cartes", onlyReview:false, playing:null, drafts: store.get("drafts",{}) };
 const view = document.getElementById("view");
 const byLevel = arr => arr.filter(x => state.level==="all" || x.level===state.level);
 const exChip = '<span class="chip ex">exemple</span>';
@@ -2337,7 +2375,7 @@ function renderQuiz(head, pool, bind){
 }
 
 function renderEcoute(){
-  if(state.playing!==null) stopSync();
+  stopSync();
   const items = byLevel(DATA.ecoute);
   const canSpeak = "speechSynthesis" in window;
   view.innerHTML = `<h2>Écoute</h2><p class="sub">${items.length} textes originaux lus par la voix française de l'appareil. Écoutez, répondez, puis vérifiez.</p>
@@ -2345,42 +2383,44 @@ function renderEcoute(){
     <span class="eyebrow">Vitesse</span>
     ${[0.8,0.9,1].map(r=>`<button class="btn" style="padding:6px 10px;${r===state.rate?'border-color:var(--encre);color:var(--encre)':''}" data-rate="${r}">×${r}</button>`).join("")}
   </div>
-  <label class="note" style="display:flex;gap:8px;align-items:center;margin:0 0 14px"><input type="checkbox" id="follow" ${state.follow?"checked":""}> Texte synchronisé : la transcription s'affiche et suit la lecture mot à mot. Touchez un mot pour reprendre à partir de là.</label>
+  <label class="note" style="display:flex;gap:8px;align-items:center;margin:0 0 14px"><input type="checkbox" id="follow" ${state.follow?"checked":""}> Texte synchronisé : la transcription s'affiche et suit la lecture mot à mot. Touchez un mot pour reprendre à partir de là. Le bouton pause permet de s'arrêter et de reprendre au même endroit.</label>
   ${canSpeak?"":'<p class="note">La lecture vocale n\'est pas disponible sur ce navigateur : lisez la transcription.</p>'}
   <div class="stack">${items.map((e,i)=>`
     <article class="sheet">
       <div class="meta"><span class="chip">${e.level}</span><span class="eyebrow">${e.theme} · ${e.type}</span></div>
-      <div class="player" style="margin:6px 0 4px">
-        <button class="play" id="play-${i}" aria-label="Écouter ou arrêter" ${canSpeak?"":"disabled"}>${ICON_PLAY}</button>
-        <h3 style="margin:0;font:400 1.1rem var(--f-display);flex:1;min-width:0">${e.title}</h3>
-      </div>
+      <h3 style="margin:2px 0 8px;font:400 1.1rem var(--f-display)">${e.title}</h3>
+      ${playerHTML("e"+i)}
       <ol style="padding-left:20px;margin:10px 0 0">${e.questions.map(q=>`
         <li style="margin-top:8px">${q.q}<details style="margin-top:2px"><summary>Réponse</summary><p class="note" style="margin:4px 0 0;color:var(--ok)">${q.a}</p></details></li>`).join("")}</ol>
-      <details class="transcript" id="tr-${i}"><summary>Transcription</summary><p class="kar" id="kar-${i}">${karaoke(e.text)}</p></details>
+      <details class="transcript" id="tr-e${i}"><summary>Transcription</summary><p class="kar" id="kar-e${i}">${karaoke(e.text)}</p></details>
     </article>`).join("") || '<p class="empty">Aucun extrait pour ce niveau.</p>'}</div>
   <h2>Écoutes authentiques</h2><p class="sub">De vraies voix françaises, à ouvrir sur leur site. Les sources libres de droits sont en tête.</p>
   ${["Libres de droits","Gratuits"].map(g=>`<p class="eyebrow" style="margin:14px 0 8px">${g}</p><ul class="links">${DATA.ressources.filter(r=>r.group===g).map(r=>`<li><a href="${r.url}" target="_blank" rel="noopener"><div>${r.name}<small>${r.src}</small></div><span>↗</span></a></li>`).join("")}</ul>`).join("")}`;
   view.querySelectorAll("[data-rate]").forEach(b=>b.onclick=()=>{ state.rate=+b.dataset.rate; renderEcoute(); });
   document.getElementById("follow").onchange=ev=>{ state.follow=ev.target.checked; store.set("follow",state.follow); };
-  items.forEach((e,i)=>{
-    const b=document.getElementById("play-"+i); if(!b) return;
-    b.onclick=()=>{ if(state.playing===i){ stopSync(); return; } speakSync(i, e.text, 0); };
-    document.getElementById("kar-"+i).addEventListener("click",ev=>{
-      const w=ev.target.closest("[data-s]"); if(!w || !canSpeak) return;
-      speakSync(i, e.text, +w.dataset.s);
-    });
-  });
+  items.forEach((e,i)=>bindPlayer("e"+i, e.text));
 }
 
-/* Lecture synchronisée : surligne le mot prononcé */
+/* Lecture synchronisée : surligne le mot prononcé, avec pause et reprise */
 const ICON_PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
 const ICON_STOP = '<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
 function karaoke(text){
   let out="", re=/\S+/g, m, last=0;
   while((m=re.exec(text))){ out += text.slice(last,m.index) + `<span class="w" data-s="${m.index}">${m[0]}</span>`; last=m.index+m[0].length; }
   return out + text.slice(last);
 }
-let sync = { timer:null, i:null };
+let sync = { timer:null, pos:0, tok:0 };
+function playerHTML(id){
+  const ok="speechSynthesis" in window;
+  return `<div class="player2"><button class="play" id="play-${id}" aria-label="Lire" ${ok?"":"disabled"}>${ICON_PLAY}</button><button class="stopb" id="stop-${id}" aria-label="Arrêter" hidden>${ICON_STOP}</button><span class="note pstate" id="ps-${id}" style="margin:0">${ok?"":"Lecture vocale indisponible sur ce navigateur."}</span></div>`;
+}
+function setPlayerUI(id, mode){
+  const b=document.getElementById("play-"+id), s=document.getElementById("stop-"+id), t=document.getElementById("ps-"+id);
+  if(b){ b.innerHTML = mode==="play" ? ICON_PAUSE : ICON_PLAY; b.classList.toggle("on", mode==="play"); b.setAttribute("aria-label", mode==="play" ? "Mettre en pause" : mode==="pause" ? "Reprendre" : "Lire"); }
+  if(s) s.hidden = mode==="idle";
+  if(t) t.textContent = mode==="play" ? "Lecture…" : mode==="pause" ? "En pause · touchez ▶ pour reprendre" : "";
+}
 function markWord(i, charIdx){
   const box=document.getElementById("kar-"+i); if(!box) return;
   let cur=null; for(const w of box.children){ if(+w.dataset.s<=charIdx) cur=w; else break; }
@@ -2394,26 +2434,48 @@ function markWord(i, charIdx){
 function clearSync(i){
   clearInterval(sync.timer); sync.timer=null;
   const box=document.getElementById("kar-"+i); if(box) box.querySelectorAll(".w").forEach(w=>w.classList.remove("cur","read"));
-  const b=document.getElementById("play-"+i); if(b){ b.innerHTML=ICON_PLAY; b.classList.remove("on"); }
+  setPlayerUI(i,"idle");
 }
-function stopSync(){ try{ speechSynthesis.cancel(); }catch(_){} if(state.playing!==null) clearSync(state.playing); state.playing=null; }
+function stopSync(){
+  sync.tok++; try{ speechSynthesis.cancel(); }catch(_){}
+  if(state.playing!==null) clearSync(state.playing);
+  if(state.paused) clearSync(state.paused.i);
+  state.playing=null; state.paused=null;
+}
+function pauseSync(){
+  const i=state.playing; if(i===null) return;
+  sync.tok++; clearInterval(sync.timer); sync.timer=null;
+  state.paused={ i, pos: sync.pos||0 }; state.playing=null;
+  try{ speechSynthesis.cancel(); }catch(_){}
+  setPlayerUI(i,"pause");
+}
+const wordStart = (text,pos) => { pos=Math.max(0,Math.min(pos,text.length)); while(pos>0 && !/\s/.test(text[pos-1])) pos--; return pos; };
 function speakSync(i, text, from){
   stopSync();
   if(!("speechSynthesis" in window)) return;
-  state.playing=i;
-  const b=document.getElementById("play-"+i); if(b){ b.innerHTML=ICON_STOP; b.classList.add("on"); }
+  const tok=++sync.tok;
+  state.playing=i; sync.pos=from; setPlayerUI(i,"play");
   if(state.follow){ const d=document.getElementById("tr-"+i); if(d) d.open=true; }
   const part=text.slice(from), u=new SpeechSynthesisUtterance(part);
   u.lang="fr-FR"; u.rate=state.rate;
   try{ const fr=speechSynthesis.getVoices().find(v=>v.lang && v.lang.startsWith("fr")); if(fr) u.voice=fr; }catch(_){}
   let real=false, t0=0;
-  u.onboundary = ev => { if(ev.name && ev.name!=="word") return; real=true; if(state.follow) markWord(i, from+ev.charIndex); };
-  u.onstart = () => { t0=performance.now();
+  u.onboundary = ev => { if(tok!==sync.tok) return; if(ev.name && ev.name!=="word") return; real=true; sync.pos=from+ev.charIndex; if(state.follow) markWord(i, sync.pos); };
+  u.onstart = () => { if(tok!==sync.tok) return; t0=performance.now();
     // Repli si l'appareil ne signale pas les mots : estimation au rythme moyen de lecture
-    sync.timer=setInterval(()=>{ if(real || !state.follow) return;
-      const chars=(performance.now()-t0)/1000 * 14.5 * state.rate; markWord(i, from+Math.min(chars, part.length)); }, 120); };
-  u.onend = u.onerror = () => { if(state.playing===i){ clearSync(i); state.playing=null; } };
+    sync.timer=setInterval(()=>{ if(real || tok!==sync.tok) return;
+      sync.pos=from+Math.min((performance.now()-t0)/1000 * 14.5 * state.rate, part.length); if(state.follow) markWord(i, sync.pos); }, 120); };
+  u.onend = u.onerror = () => { if(tok!==sync.tok) return; if(state.playing===i){ clearSync(i); state.playing=null; } };
   speechSynthesis.speak(u);
+}
+function bindPlayer(id, text){
+  const b=document.getElementById("play-"+id), s=document.getElementById("stop-"+id), k=document.getElementById("kar-"+id);
+  if(b) b.onclick=()=>{
+    if(state.playing===id) return pauseSync();
+    if(state.paused && state.paused.i===id) return speakSync(id, text, wordStart(text, state.paused.pos));
+    speakSync(id, text, 0); };
+  if(s) s.onclick=()=>stopSync();
+  if(k) k.addEventListener("click",ev=>{ const w=ev.target.closest("[data-s]"); if(!w || !("speechSynthesis" in window)) return; speakSync(id, text, +w.dataset.s); });
 }
 
 function methodHTML(keys){ const E=DATA.examen; return `<div class="stack">${keys.map(k=>{ const M=E.methode[k]; return `
@@ -2433,109 +2495,301 @@ function bindMethods(){
   view.querySelectorAll("[data-chkreset]").forEach(b=>b.onclick=()=>{ const k=b.dataset.chkreset; Object.keys(state.checks).filter(x=>x.startsWith(k+"-")).forEach(x=>delete state.checks[x]); store.set("checks",state.checks); renderExamen(); });
   view.querySelectorAll("[data-exlvl]").forEach(b=>b.onclick=()=>{ state.exlvl=b.dataset.exlvl; store.set("exlvl",state.exlvl); renderExamen(); window.scrollTo(0,0); });
 }
-const exSwitch = () => `<div class="row" role="group" aria-label="Diplôme" style="margin-top:18px">${["C1","C2"].map(l=>`<button class="btn" data-exlvl="${l}" aria-pressed="${state.exlvl===l}" style="padding:6px 14px;${state.exlvl===l?'background:var(--encre);border-color:var(--encre);color:var(--sheet)':''}">DALF ${l}</button>`).join("")}</div>`;
-function renderExamenC2(){
-  const E=DATA.examen, C=E.c2, n=state.c2i % C.sujets.length;
-  view.innerHTML = exSwitch() + `<h2>Examen DALF C2</h2><p class="sub">Deux épreuves intégrées, qui combinent compréhension et production.</p>
-  <div class="epreuves">${C.epreuves.map(e=>`<div class="ep"><span class="pts">/${e.pts}</span><b>${e.name}</b><p>${e.desc}</p></div>`).join("")}</div>
-  <p class="note">Total sur 100. Il faut 50 points pour obtenir le diplôme.</p>
-  <h2>Méthode par épreuve</h2><p class="sub">La démarche pas à pas, et une liste à cocher avant de rendre sa copie.</p>
-  ${methodHTML(["c2oral","c2ecrit"])}
-  <h2>Production écrite C2</h2>
-  <article class="sheet">
-    <div class="meta"><span class="chip">C2</span><span class="eyebrow">Texte structuré</span>${exChip}</div>
-    <p style="margin:0 0 8px"><b>Sujet :</b> ${C.sujets[n]}</p>
-    <button type="button" class="more-link" id="c2-next" style="margin:0 0 10px">↻ Autre sujet (${n+1}/${C.sujets.length})</button>
-    <textarea id="c2-text" rows="12" style="width:100%;box-sizing:border-box;font:16px/1.6 var(--f-body);padding:10px;border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--ink);resize:vertical" placeholder="Rédigez ici…">${(state.drafts.c2||"").replace(/</g,"&lt;")}</textarea>
-    <div class="row" style="justify-content:space-between;margin-top:6px"><span class="counter" id="c2-count"></span><span class="note" style="margin:0">Au moins 700 mots</span></div>
-  </article>
-  <h2>Sujet officiel</h2>
-  <ul class="links"><li><a href="https://www.france-education-international.fr/article/dalf-c2?langue=fr" target="_blank" rel="noopener"><div>Sujet de démonstration DALF C2<small>France Éducation international · documents, audio et corrigés</small></div><span>↗</span></a></li></ul>`;
-  bindMethods();
-  const ta=document.getElementById("c2-text"), cnt=document.getElementById("c2-count");
-  const upd=()=>{ const k=(ta.value.trim().match(/\S+/g)||[]).length;
-    cnt.textContent = k ? `${k} mots · ${k>=700?"minimum atteint":`encore ${700-k} mot(s)`}` : "0 mot";
-    cnt.style.color = !k ? "var(--muted)" : k>=700 ? "var(--ok)" : k>=600 ? "var(--warn)" : "var(--marge)"; };
-  ta.oninput=()=>{ state.drafts.c2=ta.value; store.set("drafts",state.drafts); upd(); }; upd();
-  document.getElementById("c2-next").onclick=()=>{ state.c2i++; store.set("c2i",state.c2i); renderExamenC2(); };
+/* ---------- Onglet Examen : Entraînement | Examen blanc | Méthode ---------- */
+const exSwitch = () => `<div class="row" role="group" aria-label="Diplôme" style="margin:4px 0 14px">${["C1","C2"].map(l=>`<button class="btn" data-exlvl="${l}" aria-pressed="${state.exlvl===l}" style="padding:6px 14px;${state.exlvl===l?'background:var(--encre);border-color:var(--encre);color:var(--sheet)':''}">DALF ${l}</button>`).join("")}</div>`;
+const wc = t => (t.trim().match(/\S+/g)||[]).length;
+const ICO = {
+  ecoute:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+  structures:'<path d="M4 6h16M4 12h10M4 18h13"/>',
+  vocab:'<rect x="4" y="5" width="13" height="15" rx="2"/><path d="M8 3h11a1 1 0 0 1 1 1v13"/>',
+  grammaire:'<path d="M4 18 8 6l4 12M5.5 14h5M14 18V9h3.5a2.5 2.5 0 0 1 0 5H14m0 0h4a2 2 0 0 1 0 4h-4"/>',
+  essai:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/>',
+  c2:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7M9 7h3"/>'
+};
+const icon = k => `<svg viewBox="0 0 24 24" aria-hidden="true" class="ico">${ICO[k]}</svg>`;
+
+/* Hasard reproductible : une série contient toujours les mêmes questions */
+function rng(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function sshuffle(arr, seed){ const r=rng(seed), a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+let _pools = null;
+function pools(){
+  if(_pools) return _pools;
+  _pools = {
+    structures: sshuffle(DATA.structures.filter(firstBold), 1101),
+    vocab: sshuffle(DATA.vocab.filter(v=>blank(v)), 2202),
+    grammaire: DATA.grammaire.slice(),
+    ecoute: DATA.ecoute.slice(),
+    essai: DATA.examen.sujetsEssai.slice(),
+    c2: DATA.examen.c2.sujets.slice()
+  };
+  return _pools;
+}
+const TYPES = {
+  ecoute:     { label:"Écoute", size:2, unit:"documents", kind:"listen", sub:"comme la 2ᵉ partie de l'épreuve" },
+  structures: { label:"Structures", size:10, unit:"textes à trous", kind:"mcq" },
+  vocab:      { label:"Vocabulaire", size:10, unit:"textes à trous", kind:"mcq" },
+  grammaire:  { label:"Grammaire", size:10, unit:"questions", kind:"mcq" },
+  essai:      { label:"Essai C1", size:1, unit:"sujet · 250 mots", kind:"write", min:250, meth:"essai" },
+  c2:         { label:"Texte C2", size:1, unit:"sujet · 700 mots", kind:"write", min:700, meth:"c2ecrit" }
+};
+const nSeries = t => Math.ceil(pools()[t].length / TYPES[t].size);
+const prog = (t,n) => ((state.prog[t]||{})[n]) || null;
+function setProg(t,n,v){ state.prog[t]=state.prog[t]||{}; state.prog[t][n]=v; store.set("prog",state.prog); }
+
+function buildMCQ(t, n){
+  const P=pools()[t], items=P.slice(n*10, n*10+10);
+  return items.map((it,k)=>{
+    const r=rng(7919*(n+1)+k*31+t.length);
+    if(t==="grammaire") return { prompt: it.q.replace(/……….|………./g,"<span class='gap'>……</span>"), opts: it.opts, a: it.a, tag: it.pt, ex: it.ex };
+    if(t==="structures"){
+      const ans=firstBold(it), seen=new Set([ans.toLowerCase()]), others=[];
+      for(const o of sshuffle(DATA.structures, Math.floor(r()*1e9))){ const f=firstBold(o); if(f && !seen.has(f.toLowerCase())){ seen.add(f.toLowerCase()); others.push(f); } if(others.length===3) break; }
+      const opts=sshuffle([ans,...others], Math.floor(r()*1e9));
+      return { prompt: it.example.replace(/<b>.*?<\/b>/, "<span class='gap'>……</span>").replace(/<\/?b>/g,""), opts, a: opts.indexOf(ans), tag: it.name, ex: tNote(it) };
+    }
+    const ans=core(it.word), seen=new Set([ans.toLowerCase()]), others=[];
+    const same=DATA.vocab.filter(v=>v.theme===it.theme), pool=same.length>=6?same:DATA.vocab;
+    for(const o of sshuffle(pool, Math.floor(r()*1e9))){ const c=core(o.word); if(!seen.has(c.toLowerCase())){ seen.add(c.toLowerCase()); others.push(c); } if(others.length===3) break; }
+    const opts=sshuffle([ans,...others], Math.floor(r()*1e9));
+    return { prompt: blank(it), opts, a: opts.indexOf(ans), tag: it.word, ex: it.def };
+  });
 }
 
 function renderExamen(){
-  if(state.exlvl==="C2"){ renderExamenC2(); return; }
-  const E = DATA.examen, x = E.exercice;
-  const heard = state.heard, done = state.checked;
-  view.innerHTML = exSwitch() + `<h2>Examen blanc DALF C1</h2><p class="sub">Format calqué sur le sujet de démonstration officiel. Sans chronomètre.</p>
-  <div class="epreuves">${E.epreuves.map(e=>`<div class="ep"><span class="pts">/${e.pts}</span><b>${e.name}</b><p>${e.desc}</p></div>`).join("")}</div>
-  <p class="note">Total sur 100. Il faut 50 points et au moins 5/25 dans chaque épreuve.</p>
-  ${E.regles.map(r=>`<p class="rule-note">${r}</p>`).join("")}
+  if(state.playing!==null || state.paused) { stopSync(); state.paused=null; }
+  const subs=[["train","Entraînement"],["blanc","Examen blanc"],["meth","Méthode"]];
+  const top = `<h2>Examen</h2><div class="subtabs" role="tablist" aria-label="Examen">${subs.map(([k,l])=>`<button role="tab" id="sub-${k}" data-sub="${k}" aria-selected="${state.exsub===k}">${l}</button>`).join("")}</div>`;
+  if(state.exsub==="blanc") return renderBlanc(top);
+  if(state.exsub==="meth") return renderMeth(top);
+  if(state.exRun) return renderRun();
+  if(state.exType) return renderSeriesList(top);
+  renderTrain(top);
+}
+function bindTop(){
+  view.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{ state.exsub=b.dataset.sub; store.set("exsub",state.exsub); state.exRun=null; renderExamen(); window.scrollTo(0,0); });
+  view.querySelectorAll("[data-goto-meth]").forEach(b=>b.onclick=()=>{ state.exsub="meth"; state.mopen=b.dataset.gotoMeth; renderExamen();
+    const d=view.querySelector(`details.method[data-m="${state.mopen}"]`); if(d) d.scrollIntoView({block:"start"}); });
+}
 
-  <h2>Méthode par épreuve</h2><p class="sub">La démarche pas à pas pour chaque épreuve, et une liste à cocher avant de rendre sa copie.</p>
-  ${methodHTML(["co","ce","synthese","essai","po"])}
+/* Entraînement : une carte par type d'exercice */
+function seriesStats(t){
+  const N=nSeries(t), P=state.prog[t]||{}; let done=0, sum=0, cnt=0;
+  for(const n in P){ if(P[n].done){ done++; if(TYPES[t].kind!=="write" && P[n].total){ sum+=P[n].best/P[n].total; cnt++; } } }
+  return { N, done, avg: cnt? sum/cnt : null };
+}
+function renderTrain(top){
+  const keys=Object.keys(TYPES); let D=0,T=0,S=0,C=0;
+  keys.forEach(t=>{ const s=seriesStats(t); D+=s.done; T+=s.N; if(s.avg!==null){ S+=s.avg; C++; } });
+  view.innerHTML = top + `
+  <div class="stats"><div><span class="eyebrow">Séries terminées</span><b>${D} / ${T}</b></div><div><span class="eyebrow">Score moyen</span><b>${C?Math.round(S/C*100)+" %":"—"}</b></div></div>
+  <div class="tcards">${keys.map(t=>{ const s=seriesStats(t), T=TYPES[t];
+    return `<button class="tcard" data-type="${t}">${icon(t)}<b>${T.label}</b><small>${s.N} ${T.kind==="write"?"sujets":"séries"} · ${T.kind==="write"?T.unit:T.size+" "+T.unit}</small><div class="progress"><i style="width:${s.N?s.done/s.N*100:0}%"></i></div><small class="counter">${s.done} / ${s.N}</small></button>`; }).join("")}</div>
+  <p class="note" style="margin-top:14px">Chaque série contient toujours les mêmes questions : vous pouvez refaire une série ratée et suivre vos progrès.</p>`;
+  bindTop();
+  view.querySelectorAll("[data-type]").forEach(b=>b.onclick=()=>{ state.exType=b.dataset.type; renderExamen(); window.scrollTo(0,0); });
+}
 
-  <h2>Entraînement</h2>
+/* Liste des séries d'un type */
+function renderSeriesList(top){
+  const t=state.exType, T=TYPES[t], s=seriesStats(t), N=s.N;
+  const tiles=[]; for(let n=0;n<N;n++){ const p=prog(t,n); let cls="", sub="";
+    if(p && p.done){ cls="ok"; sub = T.kind==="write" ? `${p.best} mots` : `${p.best}/${p.total}`; }
+    else if(p && p.cur){ cls="go"; sub = T.kind==="mcq" ? `${p.cur.i}/${T.size}…` : "en cours"; }
+    tiles.push(`<button class="stile ${cls}" data-n="${n}" aria-label="Série ${n+1}${sub?", "+sub:""}">${n+1}${sub?`<small>${sub}</small>`:""}</button>`); }
+  view.innerHTML = top + `
+  <button class="more-link" id="back-train" style="margin:0 0 8px">← Entraînement</button>
+  <h3 class="sl-title">${icon(t)} ${T.label}</h3>
+  <p class="sub">${s.done} ${T.kind==="write"?"sujet(s)":"série(s)"} sur ${N} terminé(s)${s.avg!==null?` · moyenne ${Math.round(s.avg*100)} %`:""}. ${T.kind==="write"?`Un sujet par série, ${T.min} mots minimum.`:`${T.size} ${T.unit} par série${T.sub?", "+T.sub:""}.`}</p>
+  <div class="stiles">${tiles.join("")}</div>`;
+  bindTop();
+  document.getElementById("back-train").onclick=()=>{ state.exType=null; renderExamen(); };
+  view.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{ state.exRun={t, n:+b.dataset.n}; renderExamen(); window.scrollTo(0,0); });
+}
+
+/* Déroulement d'une série */
+function runHead(t,n,extra){
+  return `<div class="runhead"><button class="more-link" id="run-back">← ${TYPES[t].label}</button><span class="counter">Série ${n+1}${extra?" · "+extra:""}</span></div>`;
+}
+function bindRunHead(){ document.getElementById("run-back").onclick=()=>{ stopSync(); state.paused=null; state.exRun=null; renderExamen(); window.scrollTo(0,0); }; }
+function renderRun(){
+  const {t,n}=state.exRun, T=TYPES[t];
+  if(T.kind==="mcq") return runMCQ(t,n);
+  if(T.kind==="listen") return runListen(t,n);
+  return runWrite(t,n);
+}
+function runMCQ(t,n){
+  const qs=buildMCQ(t,n), T=TYPES[t]; let p=prog(t,n)||{};
+  let cur=p.cur || { i:0, score:0, ans:[] };
+  if(!p.cur && p.done && !state.exRun.restart){ return runResult(t,n,qs,p.lastAns||[]); }
+  if(state.exRun.restart){ cur={i:0,score:0,ans:[]}; state.exRun.restart=false; }
+  if(cur.i>=qs.length) return runResult(t,n,qs,cur.ans);
+  const q=qs[cur.i], picked=cur.ans[cur.i], done=picked!==undefined;
+  view.innerHTML = runHead(t,n,`Question ${cur.i+1} / ${qs.length}`) + `
+  <div class="progress" style="margin:0 0 12px"><i style="width:${cur.i/qs.length*100}%"></i></div>
+  <div class="sheet">
+    <div class="meta"><span class="eyebrow">${done?q.tag:(t==="grammaire"?"Grammaire":"Complétez la phrase")}</span></div>
+    <p class="qprompt">${q.prompt}</p>
+    <div class="stack" style="gap:8px">${q.opts.map((o,j)=>`<button class="qopt ${done?(j===q.a?"right":(picked===j?"wrong":"")):""}" data-o="${j}" ${done?"disabled":""}>${t==="grammaire"?String.fromCharCode(65+j)+". ":""}${o}</button>`).join("")}</div>
+    ${done?`<p class="note" style="margin:12px 0 0">${q.ex}</p><div class="row" style="margin-top:12px"><button class="btn primary" id="q-next">${cur.i+1<qs.length?"Suivant":"Voir le résultat"}</button></div>`:""}
+  </div>`;
+  bindRunHead();
+  const save=()=>setProg(t,n,Object.assign({}, prog(t,n)||{}, {cur}));
+  view.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{ const j=+b.dataset.o; cur.ans[cur.i]=j; if(j===q.a) cur.score++; save(); renderRun(); });
+  const nx=document.getElementById("q-next"); if(nx) nx.onclick=()=>{ cur.i++;
+    if(cur.i>=qs.length){ const old=prog(t,n)||{}; setProg(t,n,{done:true, best:Math.max(old.best||0,cur.score), last:cur.score, total:qs.length, lastAns:cur.ans}); return runResult(t,n,qs,cur.ans); }
+    save(); renderRun(); window.scrollTo(0,0); };
+}
+function runResult(t,n,qs,ans){
+  const p=prog(t,n)||{}, score=qs.filter((q,k)=>ans[k]===q.a).length, miss=qs.filter((q,k)=>ans[k]!==q.a), N=nSeries(t);
+  view.innerHTML = runHead(t,n,"Résultat") + `
+  <div class="sheet">
+    <div class="eyebrow">Score</div><div class="word" style="font-variant-numeric:tabular-nums">${score} / ${qs.length}</div>
+    ${p.best!==undefined?`<p class="note" style="margin:2px 0 10px">Meilleur score sur cette série : ${p.best} / ${qs.length}</p>`:""}
+    ${miss.length?`<p class="eyebrow" style="margin:10px 0 6px">À revoir</p><ul class="miss">${miss.map(q=>`<li><b>${q.tag}</b><br><span class="note">${q.ex}</span></li>`).join("")}</ul>`:'<p class="note">Sans faute.</p>'}
+    <div class="row" style="margin-top:12px"><button class="btn" id="r-again">Refaire la série</button>${n+1<N?`<button class="btn primary" id="r-next">Série ${n+2}</button>`:""}</div>
+  </div>`;
+  bindRunHead();
+  document.getElementById("r-again").onclick=()=>{ const p=prog(t,n)||{}; delete p.cur; setProg(t,n,p); state.exRun={t,n,restart:true}; renderRun(); window.scrollTo(0,0); };
+  const nx=document.getElementById("r-next"); if(nx) nx.onclick=()=>{ state.exRun={t,n:n+1}; renderRun(); window.scrollTo(0,0); };
+}
+
+/* Série d'écoute : 2 documents, questions ouvertes, auto-correction */
+function runListen(t,n){
+  const docs=pools().ecoute.slice(n*2,n*2+2), p=prog(t,n)||{}, marks=(p.cur&&p.cur.marks)||p.lastMarks||{};
+  const total=docs.reduce((s,d)=>s+d.questions.length,0), marked=Object.keys(marks).length, score=Object.values(marks).filter(Boolean).length;
+  view.innerHTML = runHead(t,n,`${marked} / ${total} corrigées`) + `
+  <p class="note" style="margin:0 0 12px">Écoutez chaque document, répondez dans votre tête ou sur papier, puis affichez la réponse et dites si vous aviez juste.</p>
+  <div class="stack">${docs.map((d,k)=>{ const id=`r${n}-${k}`; return `
+    <article class="sheet">
+      <div class="meta"><span class="chip">${d.level}</span><span class="eyebrow">${d.theme} · ${d.type}</span></div>
+      <h3 style="margin:2px 0 8px;font:400 1.1rem var(--f-display)">${d.title}</h3>
+      ${playerHTML(id)}
+      <ol class="lq">${d.questions.map((q,j)=>{ const key=k+"-"+j, m=marks[key]; return `
+        <li>${q.q}
+          <details ${m!==undefined?"open":""}><summary>Réponse</summary><p class="note" style="margin:4px 0 6px;color:var(--ok)">${q.a}</p>
+            <div class="row" style="gap:6px"><button class="btn mk ${m===true?"good":""}" data-mk="${key}" data-v="1">J'avais juste</button><button class="btn mk ${m===false?"bad":""}" data-mk="${key}" data-v="0">Je me suis trompé(e)</button></div>
+          </details></li>`; }).join("")}</ol>
+      <details class="transcript" id="tr-${id}"><summary>Transcription</summary><p class="kar" id="kar-${id}">${karaoke(d.text)}</p></details>
+    </article>`; }).join("")}</div>
+  <div class="row" style="margin-top:14px;justify-content:space-between"><span class="score">${score} / ${total}</span>
+    <button class="btn primary" id="l-done" ${marked<total?"disabled style='opacity:.5'":""}>${p.done && marked===total?"Enregistrer à nouveau":"Terminer la série"}</button></div>`;
+  bindRunHead();
+  docs.forEach((d,k)=>bindPlayer(`r${n}-${k}`, d.text));
+  view.querySelectorAll("[data-mk]").forEach(b=>b.onclick=()=>{ const cur=Object.assign({}, marks); cur[b.dataset.mk]=b.dataset.v==="1"; setProg(t,n,Object.assign({}, prog(t,n)||{}, {cur:{marks:cur}})); const y=window.scrollY; renderRun(); window.scrollTo(0,y); });
+  document.getElementById("l-done").onclick=()=>{ if(marked<total) return; const old=prog(t,n)||{}; setProg(t,n,{done:true,best:Math.max(old.best||0,score),last:score,total,lastMarks:marks}); stopSync(); state.exRun=null; renderExamen(); };
+}
+
+/* Série d'écriture : un sujet */
+function countLine(nw, min){
+  const col = !nw ? "var(--muted)" : nw>=min ? "var(--ok)" : nw>=min*0.9 ? "var(--warn)" : "var(--marge)";
+  return [`${nw} mots · ${!nw?"attendu "+min+" minimum":nw>=min?"minimum atteint":`encore ${min-nw} mot(s)`}`, col];
+}
+function runWrite(t,n){
+  const T=TYPES[t], sujet=pools()[t][n], key=t+"-"+n, M=DATA.examen.methode[T.meth];
+  view.innerHTML = runHead(t,n,T.label) + `
   <article class="sheet">
-    <div class="meta"><span class="chip">C1</span><span class="eyebrow">${x.theme}</span>${exChip}</div>
-    <h3 style="margin:2px 0 12px;font:400 1.1rem var(--f-display)">${x.title}</h3>
-    <div class="player">
-      <button class="play" id="ex-play" aria-label="Écouter" ${heard?"disabled style='opacity:.4'":""}><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button>
-      <span class="note" style="margin:0">${heard?"Écoute utilisée, comme le jour de l'examen.":"Lisez les questions, puis écoutez une seule fois."}</span>
-    </div>
-    <form id="ex-form">${x.questions.map((q,i)=>`
-      <fieldset class="q"><legend>${i+1}. ${q.q}</legend>
-      ${q.opts.map((o,j)=>{
-        const cls = done ? (j===q.a?"right":(state.answers[i]===j?"wrong":"")) : "";
-        return `<label class="${cls}"><input type="radio" id="q${i}-${j}" name="q${i}" value="${j}" ${state.answers[i]===j?"checked":""} ${done?"disabled":""}> ${String.fromCharCode(65+j)}. ${o}</label>`;
-      }).join("")}</fieldset>`).join("")}
-      <div class="row" style="margin-top:14px">
-        ${done
-          ? `<span class="score">${x.questions.filter((q,i)=>state.answers[i]===q.a).length} / ${x.questions.length}</span><button type="button" class="btn" id="ex-reset">Recommencer</button>`
-          : `<button type="submit" class="btn primary">Corriger</button>`}
-      </div>
-    </form>
-    ${done?`<details class="transcript"><summary>Afficher la transcription</summary><p>${x.text}</p></details>`:""}
-  </article>
+    <div class="meta"><span class="chip">${t==="c2"?"C2":"C1"}</span><span class="eyebrow">Sujet ${n+1}</span></div>
+    <p style="margin:0 0 10px"><b>${sujet}</b></p>
+    <textarea id="w-text" rows="12" class="wbox" placeholder="Rédigez ici…">${(state.drafts[key]||"").replace(/</g,"&lt;")}</textarea>
+    <div class="row" style="justify-content:space-between;margin-top:6px"><span class="counter" id="w-count"></span><button class="more-link" data-goto-meth="${T.meth}">Conseils ›</button></div>
+    <p class="eyebrow" style="margin:14px 0 6px">Avant de rendre</p>
+    <div class="checks">${M.check.map((c,j)=>`<label><input type="checkbox" data-chk="${T.meth}-${j}" ${state.checks[T.meth+"-"+j]?"checked":""}> ${c}</label>`).join("")}</div>
+    <div class="row" style="margin-top:14px"><button class="btn primary" id="w-done">Marquer comme terminé</button></div>
+  </article>`;
+  bindRunHead(); bindTop();
+  view.querySelectorAll("[data-chk]").forEach(c=>c.onchange=()=>{ state.checks[c.dataset.chk]=c.checked; store.set("checks",state.checks); });
+  const ta=document.getElementById("w-text"), cnt=document.getElementById("w-count");
+  const upd=()=>{ const [txt,col]=countLine(wc(ta.value),T.min); cnt.textContent=txt; cnt.style.color=col; };
+  ta.oninput=()=>{ state.drafts[key]=ta.value; store.set("drafts",state.drafts); setProg(t,n,Object.assign({}, prog(t,n)||{}, {cur:true})); upd(); }; upd();
+  document.getElementById("w-done").onclick=()=>{ setProg(t,n,{done:true,best:wc(ta.value),total:T.min}); state.exRun=null; renderExamen(); };
+}
 
-  <h2>Production écrite</h2>
-  <article class="sheet">
-    <div class="row" role="group" aria-label="Exercice" style="margin-bottom:10px">
-      ${["synthese","essai"].map(k=>`<button type="button" class="btn" data-pe="${k}" style="padding:6px 12px;${state.pe===k?'border-color:var(--encre);color:var(--encre)':''}">${E.ecrit[k].label}</button>`).join("")}
-      ${exChip}
-    </div>
-    <p style="margin:0 0 8px"><b>Sujet :</b> ${state.pe==="essai" ? E.sujetsEssai[state.sujetI % E.sujetsEssai.length] : E.ecrit.synthese.sujet}</p>
-    ${state.pe==="essai" ? `<button type="button" class="more-link" id="pe-next" style="margin:0 0 10px">↻ Autre sujet (${state.sujetI % E.sujetsEssai.length + 1}/${E.sujetsEssai.length})</button>` : `<p class="note" style="margin:0 0 10px">Pour une vraie synthèse, entraînez-vous sur les documents du sujet officiel (lien plus bas).</p>`}
-    <ul class="note" style="padding-left:18px;margin:0 0 10px">${E.ecrit[state.pe].consignes.map(c=>`<li>${c}</li>`).join("")}</ul>
-    <textarea id="pe-text" rows="9" style="width:100%;box-sizing:border-box;font:16px/1.6 var(--f-body);padding:10px;border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--ink);resize:vertical" placeholder="Rédigez ici…">${(state.drafts[state.pe]||"").replace(/</g,"&lt;")}</textarea>
-    <div class="row" style="justify-content:space-between;margin-top:6px">
-      <span class="counter" id="pe-count"></span>
-      <span class="note" style="margin:0">Décompte officiel : « c'est-à-dire » = 1 mot</span>
-    </div>
-  </article>
+/* Examen blanc : les épreuves dans l'ordre de l'examen */
+function epRow(id, name, pts, body, meth){
+  return `<details class="eprow" ${state.blancOpen===id?"open":""} data-ep="${id}"><summary><b>${name}</b><span class="counter">/${pts}</span></summary>
+    <div class="epbody">${body}<button class="more-link" data-goto-meth="${meth}" style="margin-top:10px">Conseils pour cette épreuve ›</button></div></details>`;
+}
+function renderBlanc(top){
+  const E=DATA.examen, C1=state.exlvl!=="C2";
+  let rows="";
+  if(C1){
+    const x=E.exercice, heard=state.heard, done=state.checked;
+    const co=`<p class="note" style="margin:0 0 10px">Un extrait court, une seule écoute, comme le jour de l'examen.</p>
+      <div class="player"><button class="play" id="ex-play" aria-label="Écouter" ${heard?"disabled style='opacity:.4'":""}>${ICON_PLAY}</button><span class="note" style="margin:0">${heard?"Écoute utilisée.":"Lisez les questions, puis écoutez une seule fois."}</span></div>
+      <form id="ex-form">${x.questions.map((q,i)=>`<fieldset class="q"><legend>${i+1}. ${q.q}</legend>${q.opts.map((o,j)=>{ const cls=done?(j===q.a?"right":(state.answers[i]===j?"wrong":"")):""; return `<label class="${cls}"><input type="radio" name="q${i}" value="${j}" ${state.answers[i]===j?"checked":""} ${done?"disabled":""}> ${String.fromCharCode(65+j)}. ${o}</label>`; }).join("")}</fieldset>`).join("")}
+      <div class="row" style="margin-top:14px">${done?`<span class="score">${x.questions.filter((q,i)=>state.answers[i]===q.a).length} / ${x.questions.length}</span><button type="button" class="btn" id="ex-reset">Recommencer</button>`:`<button type="submit" class="btn primary">Corriger</button>`}</div></form>
+      <button class="more-link" data-open-type="ecoute" style="margin-top:8px">Plus d'écoutes : Entraînement › Écoute ›</button>`;
+    const ce=`<p class="note" style="margin:0 0 10px">Texte d'idées de 1 500 à 2 000 mots, questions à choix multiple, réponses rédigées et vrai / faux justifiés.</p>
+      <ul class="links"><li><a href="https://www.france-education-international.fr/article/dalf-c1?langue=fr" target="_blank" rel="noopener"><div>Sujet de démonstration officiel<small>Texte, questions et corrigé</small></div><span>↗</span></a></li></ul>`;
+    const pe=`<div class="row" role="group" aria-label="Exercice" style="margin-bottom:10px">${["synthese","essai"].map(k=>`<button type="button" class="btn" data-pe="${k}" style="padding:6px 12px;${state.pe===k?'border-color:var(--encre);color:var(--encre)':''}">${E.ecrit[k].label}</button>`).join("")}</div>
+      <p style="margin:0 0 8px"><b>Sujet :</b> ${state.pe==="essai"?E.sujetsEssai[state.sujetI % E.sujetsEssai.length]:E.ecrit.synthese.sujet}</p>
+      ${state.pe==="essai"?`<button type="button" class="more-link" id="pe-next" style="margin:0 0 10px">↻ Autre sujet</button>`:`<p class="note" style="margin:0 0 10px">Pour une vraie synthèse, utilisez les documents du sujet officiel.</p>`}
+      <textarea id="pe-text" rows="9" class="wbox" placeholder="Rédigez ici…">${(state.drafts[state.pe]||"").replace(/</g,"&lt;")}</textarea>
+      <div class="row" style="justify-content:space-between;margin-top:6px"><span class="counter" id="pe-count"></span><span class="note" style="margin:0">« c'est-à-dire » = 1 mot</span></div>`;
+    const S=E.sujetsOral, so=S[state.oralI % S.length];
+    const po=`<p class="note" style="margin:0 0 8px">1 h de préparation, exposé de 8 à 10 min, puis débat avec le jury.</p>
+      <p style="margin:0 0 8px"><b>Sujet :</b> ${so}</p><button type="button" class="more-link" id="po-next" style="margin:0 0 10px">↻ Autre sujet</button>
+      <textarea id="po-text" rows="6" class="wbox" placeholder="Plan et mots-clés (pas de phrases rédigées)">${(state.drafts.oral||"").replace(/</g,"&lt;")}</textarea>`;
+    rows = epRow("co","Compréhension de l'oral",25,co,"co")+epRow("ce","Compréhension des écrits",25,ce,"ce")+epRow("pe","Production écrite",25,pe,"synthese")+epRow("po","Production orale",25,po,"po");
+  } else {
+    const docs=DATA.ecoute.filter(d=>d.level==="C2"), d=docs[state.c2oi % docs.length];
+    const oral=`<p class="note" style="margin:0 0 8px">Écoutez deux fois le document, préparez 1 h, puis : compte rendu, votre position, débat avec le jury.</p>
+      <h3 style="margin:2px 0 8px;font:400 1.05rem var(--f-display)">${d.title}</h3>${playerHTML("c2o")}
+      <button type="button" class="more-link" id="c2o-next" style="margin:8px 0 10px">↻ Autre document</button>
+      <textarea id="c2o-text" rows="6" class="wbox" placeholder="Notes : idées du document, votre position, exemples">${(state.drafts.c2oral||"").replace(/</g,"&lt;")}</textarea>
+      <details class="transcript" id="tr-c2o"><summary>Transcription</summary><p class="kar" id="kar-c2o">${karaoke(d.text)}</p></details>`;
+    const C=E.c2, n=state.c2i % C.sujets.length;
+    const ecrit=`<p style="margin:0 0 8px"><b>Sujet :</b> ${C.sujets[n]}</p><button type="button" class="more-link" id="c2-next" style="margin:0 0 10px">↻ Autre sujet</button>
+      <textarea id="c2-text" rows="12" class="wbox" placeholder="Rédigez ici…">${(state.drafts.c2||"").replace(/</g,"&lt;")}</textarea>
+      <div class="row" style="justify-content:space-between;margin-top:6px"><span class="counter" id="c2-count"></span><span class="note" style="margin:0">Au moins 700 mots</span></div>`;
+    rows = epRow("c2oral","Compréhension et production orales",50,oral,"c2oral")+epRow("c2ecrit","Compréhension et production écrites",50,ecrit,"c2ecrit");
+  }
+  view.innerHTML = top + exSwitch() + `<p class="sub">Les épreuves dans l'ordre de l'examen. Touchez une épreuve pour l'ouvrir.</p><div class="stack">${rows}</div>
+    <p class="note" style="margin-top:12px">${C1?"Total sur 100. Il faut 50 points et au moins 5/25 dans chaque épreuve.":"Total sur 100. Il faut 50 points pour obtenir le diplôme."}</p>`;
+  bindTop(); bindMethods();
+  view.querySelectorAll("details.eprow").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open) state.blancOpen=d.dataset.ep; else if(state.blancOpen===d.dataset.ep) state.blancOpen=null; }));
+  view.querySelectorAll("[data-open-type]").forEach(b=>b.onclick=()=>{ state.exsub="train"; state.exType=b.dataset.openType; state.exRun=null; renderExamen(); window.scrollTo(0,0); });
+  const draft=(id,key,after)=>{ const ta=document.getElementById(id); if(!ta) return; ta.oninput=()=>{ state.drafts[key]=ta.value; store.set("drafts",state.drafts); after&&after(); }; after&&after(); };
+  if(C1){
+    const x=E.exercice;
+    document.getElementById("ex-play").onclick=()=>{ if(state.heard) return; speak(x.text); state.heard=true; renderExamen(); };
+    const f=document.getElementById("ex-form");
+    f.onchange=e=>{ const m=e.target.name.match(/^q(\d+)$/); if(m) state.answers[+m[1]]=+e.target.value; };
+    f.onsubmit=e=>{ e.preventDefault(); state.checked=true; renderExamen(); };
+    const r=document.getElementById("ex-reset"); if(r) r.onclick=()=>{ state.checked=false; state.heard=false; state.answers={}; renderExamen(); };
+    const cfg=E.ecrit[state.pe], cnt=document.getElementById("pe-count"), ta=document.getElementById("pe-text");
+    draft("pe-text", state.pe, ()=>{ const n=wc(ta.value); let msg,col;
+      if(state.pe==="synthese"){ const off=n<cfg.min?cfg.min-n:(n>cfg.max?n-cfg.max:0); col=!n?"var(--muted)":off===0?"var(--ok)":"var(--marge)"; msg=!n?"attendu 200 à 240":off===0?"dans la fourchette":(n<cfg.min?`${off} mot(s) de moins que le minimum`:`${off} mot(s) de trop`); }
+      else { [msg,col]=countLine(n,250); msg=msg.replace(/^\d+ mots · /,""); }
+      cnt.textContent=`${n} mots · ${msg}`; cnt.style.color=col; });
+    view.querySelectorAll("[data-pe]").forEach(b=>b.onclick=()=>{ state.pe=b.dataset.pe; renderExamen(); });
+    const nx=document.getElementById("pe-next"); if(nx) nx.onclick=()=>{ state.sujetI++; store.set("sujetI",state.sujetI); renderExamen(); };
+    draft("po-text","oral");
+    document.getElementById("po-next").onclick=()=>{ state.oralI++; store.set("oralI",state.oralI); renderExamen(); };
+  } else {
+    const docs=DATA.ecoute.filter(d=>d.level==="C2"), d=docs[state.c2oi % docs.length];
+    bindPlayer("c2o", d.text);
+    document.getElementById("c2o-next").onclick=()=>{ state.c2oi++; store.set("c2oi",state.c2oi); renderExamen(); };
+    draft("c2o-text","c2oral");
+    const ta=document.getElementById("c2-text"), cnt=document.getElementById("c2-count");
+    draft("c2-text","c2",()=>{ const [txt,col]=countLine(wc(ta.value),700); cnt.textContent=txt; cnt.style.color=col; });
+    document.getElementById("c2-next").onclick=()=>{ state.c2i++; store.set("c2i",state.c2i); renderExamen(); };
+  }
+}
 
-  <h2>Sujet officiel</h2>
-  <ul class="links"><li><a href="https://www.france-education-international.fr/article/dalf-c1?langue=fr" target="_blank" rel="noopener"><div>Sujet de démonstration DALF C1<small>France Éducation international · livret, audio et corrigé</small></div><span>↗</span></a></li></ul>`;
-
-  const ta=document.getElementById("pe-text"), cnt=document.getElementById("pe-count"), cfg=E.ecrit[state.pe];
-  const upd=()=>{ const n=(ta.value.trim().match(/\S+/g)||[]).length;
-    let msg, col;
-    if(state.pe==="synthese"){
-      const off = n<cfg.min ? cfg.min-n : (n>cfg.max ? n-cfg.max : 0);
-      col = n===0 ? "var(--muted)" : off===0 ? "var(--ok)" : "var(--marge)";
-      msg = off===0 ? "dans la fourchette" : (n<cfg.min ? `${off} mot(s) de moins que le minimum` : `${off} mot(s) de trop`);
-    } else {
-      col = n===0 ? "var(--muted)" : n>=250 ? "var(--ok)" : n>=225 ? "var(--warn)" : "var(--marge)";
-      msg = n>=250 ? "minimum atteint" : n>=225 ? "toléré de justesse, visez 250" : `encore ${250-n} mot(s)`;
-    }
-    cnt.textContent = `${n} mots · ${n?msg:"attendu "+(cfg.max?cfg.min+" à "+cfg.max:cfg.min+" minimum")}`;
-    cnt.style.color = col; };
-  ta.oninput=()=>{ state.drafts[state.pe]=ta.value; store.set("drafts",state.drafts); upd(); }; upd();
-  view.querySelectorAll("[data-pe]").forEach(b=>b.onclick=()=>{ state.pe=b.dataset.pe; renderExamen(); });
-  const nx=document.getElementById("pe-next"); if(nx) nx.onclick=()=>{ state.sujetI++; store.set("sujetI",state.sujetI); renderExamen(); };
-  bindMethods();
-  document.getElementById("ex-play").onclick=()=>{ if(state.heard) return; speak(x.text); state.heard=true; renderExamen(); };
-  const f=document.getElementById("ex-form");
-  f.onchange=e=>{ const m=e.target.name.match(/^q(\d+)$/); if(m) state.answers[+m[1]]=+e.target.value; };
-  f.onsubmit=e=>{ e.preventDefault(); state.checked=true; renderExamen(); };
-  const r=document.getElementById("ex-reset"); if(r) r.onclick=()=>{ state.checked=false; state.heard=false; state.answers={}; renderExamen(); };
+/* Méthode : format, règles et fiches pas à pas */
+function renderMeth(top){
+  const E=DATA.examen, C1=state.exlvl!=="C2", eps=C1?E.epreuves:E.c2.epreuves;
+  view.innerHTML = top + exSwitch() + `
+  <div class="epreuves">${eps.map(e=>`<div class="ep"><span class="pts">/${e.pts}</span><b>${e.name}</b><p>${e.desc}</p></div>`).join("")}</div>
+  <p class="note">${C1?"Total sur 100. Il faut 50 points et au moins 5/25 dans chaque épreuve.":"Total sur 100. Il faut 50 points pour obtenir le diplôme."}</p>
+  ${C1?E.regles.map(r=>`<p class="rule-note">${r}</p>`).join(""):""}
+  <h2>Méthode par épreuve</h2><p class="sub">La démarche pas à pas, et une liste à cocher avant de rendre sa copie.</p>
+  ${methodHTML(C1?["co","ce","synthese","essai","po"]:["c2oral","c2ecrit"])}
+  <h2>Sujets officiels</h2>
+  <ul class="links"><li><a href="https://www.france-education-international.fr/article/dalf-${C1?"c1":"c2"}?langue=fr" target="_blank" rel="noopener"><div>Sujet de démonstration DALF ${C1?"C1":"C2"}<small>France Éducation international · documents, audio et corrigés</small></div><span>↗</span></a></li></ul>`;
+  bindTop(); bindMethods();
 }
 
 function speak(text){
@@ -2555,7 +2809,7 @@ function render(){
   document.querySelectorAll(".lvl button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.l===state.level));
   ({structures:renderStructures, vocab:renderVocab, ecoute:renderEcoute, examen:renderExamen})[state.tab]();
 }
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{ state.tab=b.dataset.t; store.set("tab",state.tab); try{ if(state.playing!==null) stopSync(); else speechSynthesis.cancel(); }catch(e){}; render(); window.scrollTo(0,0); });
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{ state.tab=b.dataset.t; store.set("tab",state.tab); try{ stopSync(); }catch(e){}; render(); window.scrollTo(0,0); });
 document.querySelectorAll(".lvl button").forEach(b=>b.onclick=()=>{ state.level=b.dataset.l; store.set("level",state.level); state.card=0; state.flipped=false; render(); });
 const h = location.hash.slice(1); if(["structures","vocab","ecoute","examen"].includes(h)) state.tab=h;
 if(!["structures","vocab","ecoute","examen"].includes(state.tab)) state.tab="structures";

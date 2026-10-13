@@ -1,6 +1,6 @@
 // Cache de l'application pour un usage hors ligne.
 // Changer VERSION à chaque mise à jour pour que les téléphones récupèrent la nouvelle version.
-const VERSION = "cahier-dalf-v7";
+const VERSION = "cahier-dalf-v8";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", e => {
