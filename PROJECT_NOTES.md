@@ -20,6 +20,7 @@
 - 1 410 mots et expressions en 30 thèmes.
 - 14 textes d'écoute avec transcription synchronisée.
 - Quiz.
+- **[Fait, non publié]** 50 collocations (mode « Collocations » dans l'onglet Vocabulaire) : cartes, liste, quiz. Voir section 6.
 - Onglet Examen : entraînement en séries, examen blanc au format officiel, méthode de l'écrit.
 - Fonctionnement hors ligne et installation sur l'écran d'accueil.
 
@@ -27,7 +28,7 @@
 | Fichier | Rôle |
 |---|---|
 | `index.html` | Toute l'application |
-| `sw.js` | Cache hors ligne. `VERSION` (actuellement `cahier-dalf-v9`) est à incrémenter à chaque mise à jour |
+| `sw.js` | Cache hors ligne. `VERSION` (actuellement `cahier-dalf-v10`, modifiée localement, pas encore publiée) est à incrémenter à chaque mise à jour |
 | `manifest.webmanifest` | Informations d'installation |
 | `icons/` | Icônes de l'application |
 | `README.md` | Présentation courte du projet |
@@ -48,9 +49,49 @@
 
 **Non fait :** aucune installation, aucun commit, aucun déploiement, aucune publication GitHub. Les deux nouveaux fichiers sont donc seulement présents en local, non enregistrés dans Git.
 
-## 6. Prochaines étapes envisagées (suggestions, rien n'est décidé)
-1. Relire `CLAUDE.md` et `PROJECT_NOTES.md`, puis décider si tu veux les enregistrer avec un commit.
-2. Tester l'app en local avec un petit serveur HTTP (par exemple `python -m http.server`), pour vérifier chaque onglet.
-3. Décider du prochain contenu ou de la prochaine amélioration à ajouter (nouveaux thèmes, textes d'écoute, exercices).
-4. À chaque modification de l'app : incrémenter `VERSION` dans `sw.js` pour que les téléphones reçoivent la mise à jour.
-5. À plus long terme, si `index.html` devient trop lourd à maintenir, étudier un découpage en plusieurs fichiers (à n'envisager qu'après discussion).
+## 6. Section Collocations (ajoutée, non commitée ni publiée)
+**[Fait]** Modifications locales, vérifiées avec `git diff` :
+- `index.html` (+329 lignes, 1 ligne modifiée) :
+  - `DATA.colloc` : 50 fiches (39 C1, 11 C2). Champs : `id` (stable), `level`, `colloc`, `pos`, `reg`, `sens`, `ex`, `en`, `piege`, `cle` (partie de l'exemple masquée dans le quiz), `faux` (3 mauvaises réponses).
+  - `renderColloc()` (cartes, liste) et `renderCQuiz()` (quiz), placées juste avant la section « Quiz ».
+  - Une tuile « Collocations » sur l'accueil du Vocabulaire (`collocTile()`), et une ligne au début de `renderVocab()` qui redirige vers `renderColloc()` quand `state.themeV === "__colloc"`.
+  - Une classe CSS `.trap` pour l'encadré « Piège ».
+  - Une nouvelle clé `localStorage` : `knownColloc` (dictionnaire `id` → vrai/faux). Les 30 clés existantes ne sont pas modifiées.
+- `sw.js` : `VERSION` passée de `cahier-dalf-v9` à `cahier-dalf-v10`. Aucun fichier ajouté, donc `SHELL` inchangée.
+- Non modifié : `manifest.webmanifest`, `icons/`, `README.md`, `CLAUDE.md`.
+
+**[Fait] Tests réalisés** (navigateur Chrome sans interface, sur une copie du site, servie par `python -m http.server`) :
+- Les 4 onglets s'affichent sans erreur JavaScript.
+- Tuile, cartes, retournement, « Je savais » / « À revoir », liste (50 fiches), quiz de 10 questions, retour, filtre C1/C2.
+- Une progression `known` préexistante reste intacte après usage des collocations.
+- Contrôle automatique des données : 50 identifiants uniques, l'exemple de chaque fiche contient exactement une fois la partie masquée, 3 mauvaises réponses par fiche.
+
+**[Non vérifié]**
+- Service worker, mise en cache et mode hors ligne : le test automatique n'a pas pu confirmer l'enregistrement du service worker. À tester à la main (voir section 7).
+- Affichage visuel (mise en page, mode sombre, mobile) : aucune capture d'écran examinée.
+- Aucun contrôle linguistique sur dictionnaire ou corpus.
+
+## 7. Points linguistiques à faire relire (incertains, rien n'a été corrigé)
+Plusieurs « pièges » parlent de calques de l'anglais sans source. Certaines mauvaises réponses du quiz pourraient passer pour correctes :
+- **Fiche 12, nouer des liens** : « construire des liens » est courant en français moderne, et c'est une mauvaise réponse du quiz.
+- **Fiche 22, subir des pertes** : « souffert » et « pâti de » sont défendables ; « essuyer des pertes » existe aussi.
+- **Fiche 24, lever un doute** : « enlever tout doute » s'entend couramment.
+- **Fiche 31, suivre un cours** : « prendre des cours » est standard ; « prend » est une mauvaise réponse risquée.
+- **Fiche 38, faire l'objet de** : « être l'objet de » est valide ; la mauvaise réponse « est le sujet » est discutable.
+- **Fiche 30, réussir un examen** : « l'a brillamment passé » est maladroit mais pas faux ; la phrase est ambiguë.
+- **Fiche 37, mettre en œuvre** : « exécutera la réforme » est possible.
+- **Fiche 3, mener une enquête** : « conduire une enquête » est correct ; l'explication est trop forte.
+- **Fiche 1, passer un appel** : « faire un appel » est courant au Québec.
+- **Fiche 20, s'inquiéter de / pour** : la règle « de = situation, pour = personne » est simplifiée ; « s'inquiéter pour l'avenir » est très naturel.
+- **Fiche 18, débat houleux** : « débat chaud » s'emploie ; « tiède » est une mauvaise réponse bizarre.
+- **Fiche 29, porter plainte** : « déposer une plainte » existe avec article, contrairement à ce que dit la fiche.
+- **Fiches 11, 16, 28, 35, 46, 49** : l'étiquette « calque » est discutable ou sans équivalent anglais précis (en particulier 49 : « to voice » n'appelle pas « mettre »).
+- **Fiche 50, avoir recours à** : il n'y a pas vraiment de piège de traduction.
+- **Fiche 41, poser les bases** : « mis » comme mauvaise réponse est discutable.
+
+## 8. Prochaines étapes envisagées (suggestions, rien n'est décidé)
+1. Relire les fiches signalées en section 7 et décider des corrections.
+2. Tester à la main avec `python -m http.server` (http://localhost:8000) : ouvrir tous les onglets, faire un quiz de collocations, vérifier le mode hors ligne (outils du navigateur > Application > Service Workers > cocher « Offline »), et vérifier que `cahier-dalf-v10` apparaît dans le cache.
+3. Décider si on enregistre les changements avec un commit, puis si on publie.
+4. À chaque modification de l'app : incrémenter `VERSION` dans `sw.js`.
+5. À plus long terme, étudier un découpage de `index.html` s'il devient trop lourd (après discussion).

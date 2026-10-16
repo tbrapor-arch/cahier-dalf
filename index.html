@@ -204,6 +204,7 @@ details summary{cursor:pointer;color:var(--encre);font-weight:700;font-size:.9re
 .qopt.right{border-color:var(--ok);background:var(--ok-soft);color:var(--ink)}
 .qopt.wrong{border-color:var(--marge);text-decoration:line-through;text-decoration-color:var(--marge)}
 .qopt[disabled]{cursor:default}
+.trap{margin:10px 0 0;padding:8px 10px;border-left:3px solid var(--marge);background:var(--encre-soft);border-radius:4px;font-size:.92rem}
 .filter{display:grid;gap:4px;margin-bottom:12px;min-width:0}
 .filter select{font:16px var(--f-body);padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);color:var(--ink);max-width:100%}
 /* Examen */
@@ -2251,7 +2252,10 @@ function renderSQuiz(head, pool, bind){
   const n=document.getElementById("sq-next"); if(n) n.onclick=()=>{ Q.i++; Q.picked=null; renderStructures(); };
 }
 
+const collocTile = () => { const cl=byLevel(DATA.colloc), k=cl.filter(x=>CS.known[x.id]).length;
+  return `<button class="vtile" data-vt="__colloc"><b>Collocations</b><span class="counter">${cl.length} associations · ${k} acquises</span><div class="progress"><i style="width:${cl.length?k/cl.length*100:0}%"></i></div></button>`; };
 function renderVocab(){
+  if(state.themeV==="__colloc" && !state.vhome){ renderColloc(); return; }
   if(state.themeV!=="all" && !themesOf(DATA.vocab).includes(state.themeV)) state.themeV="all";
   let items = byTheme(DATA.vocab, state.themeV);
   if(state.onlyReview) items = items.filter(x=>!state.known[x.word]);
@@ -2260,7 +2264,7 @@ function renderVocab(){
     const lv = byLevel(DATA.vocab), tile=(t,label,arr,cls="")=>{ const k=arr.filter(x=>state.known[x.word]).length;
       return `<button class="vtile ${cls}" data-vt="${t}"><b>${label}</b><span class="counter">${arr.length} mots · ${k} acquis</span><div class="progress"><i style="width:${arr.length?k/arr.length*100:0}%"></i></div></button>`; };
     view.innerHTML = `<h2>Vocabulaire</h2><p class="sub">${lv.length} mots et expressions. Choisissez un thème.</p>
-    <div class="vgrid">${tile("all","Tous les thèmes",lv,"all")}${themesOf(DATA.vocab).map(t=>tile(t,t,lv.filter(x=>x.theme===t))).join("")}</div>`;
+    <div class="vgrid">${tile("all","Tous les thèmes",lv,"all")}${collocTile()}${themesOf(DATA.vocab).map(t=>tile(t,t,lv.filter(x=>x.theme===t))).join("")}</div>`;
     view.querySelectorAll("[data-vt]").forEach(b=>b.onclick=()=>{ state.themeV=b.dataset.vt; state.vhome=false; state.card=0; state.flipped=false; state.quiz=null; renderVocab(); window.scrollTo(0,0); });
     return;
   }
@@ -2325,6 +2329,329 @@ function renderVocab(){
   document.getElementById("v-again").onclick=()=>next(false);
   document.getElementById("v-known").onclick=()=>next(true);
   document.getElementById("v-shuffle").onclick=()=>{ DATA.vocab.sort(()=>Math.random()-.5); state.card=0; state.flipped=false; renderVocab(); };
+}
+
+/* ---------- Collocations (mode du Vocabulaire) ---------- */
+/* cle = partie de l'exemple masquée dans le quiz ; faux = mauvaises réponses plausibles (calques de l'anglais) */
+DATA.colloc = [
+  { id:"passer-coup-de-fil", level:"C1", colloc:"passer un coup de fil", pos:"verbe + nom", reg:"courant",
+    sens:"Téléphoner à quelqu'un.", ex:"Je passerai un coup de fil au notaire dès demain.", en:"to make a call",
+    piege:"L'anglais dit « make a call ». En français, « faire un appel » ne s'emploie pas pour le téléphone (« faire appel à » signifie « recourir à »). On passe un coup de fil ou un appel.",
+    cle:"passerai", faux:["ferai","mettrai","tiendrai"] },
+  { id:"prendre-decision", level:"C1", colloc:"prendre une décision", pos:"verbe + nom", reg:"neutre",
+    sens:"Choisir après réflexion.", ex:"Le conseil a pris sa décision à l'unanimité.", en:"to make a decision",
+    piege:"L'anglais dit « make a decision ». « Faire une décision » est une faute : en français, on prend une décision.",
+    cle:"pris", faux:["fait","donné","mis"] },
+  { id:"mener-enquete", level:"C1", colloc:"mener une enquête", pos:"verbe + nom", reg:"neutre",
+    sens:"Conduire des recherches pour établir des faits.", ex:"La police mène l'enquête depuis trois semaines.", en:"to conduct an investigation",
+    piege:"« Conduct » appelle spontanément « conduire », qui sonne mal ici. Le verbe attendu avec enquête, campagne ou négociation est « mener ».",
+    cle:"mène", faux:["tient","pousse","porte"] },
+  { id:"poser-question", level:"C1", colloc:"poser une question", pos:"verbe + nom", reg:"neutre",
+    sens:"S'adresser à quelqu'un pour obtenir une réponse.", ex:"Elle a posé une question embarrassante au ministre.", en:"to ask a question",
+    piege:"« Demander une question » est une faute. On demande quelque chose à quelqu'un, mais on pose une question.",
+    cle:"posé", faux:["demandé","fait","donné"] },
+  { id:"commettre-erreur", level:"C2", colloc:"commettre une erreur", pos:"verbe + nom", reg:"soutenu",
+    sens:"Se tromper de façon notable.", ex:"L'auteur a commis une erreur de méthode.", en:"to make a mistake",
+    piege:"« Faire une erreur » est courant, mais « commettre » convient mieux à une erreur sérieuse (faute, crime, imprudence). « Se tromper » est souvent plus naturel à l'oral.",
+    cle:"commis", faux:["accompli","produit","effectué"] },
+  { id:"tirer-conclusion", level:"C1", colloc:"tirer une conclusion", pos:"verbe + nom", reg:"neutre",
+    sens:"Déduire quelque chose d'un raisonnement ou d'un fait.", ex:"On ne peut pas tirer de conclusion hâtive de ces chiffres.", en:"to draw a conclusion",
+    piege:"« Draw » ne devient ni « dessiner » ni « dresser » ici : on tire une conclusion, une leçon, un enseignement.",
+    cle:"tirer", faux:["dessiner","dresser","porter"] },
+  { id:"tenir-compte", level:"C1", colloc:"tenir compte de / prendre en compte", pos:"locution verbale", reg:"neutre",
+    sens:"Considérer un élément avant de décider.", ex:"Il faut tenir compte des risques avant de signer.", en:"to take into account",
+    piege:"Deux constructions à ne pas mélanger : « tenir compte DE + nom » et « prendre EN compte + nom » (sans « de »). On ne dit pas « prendre compte ».",
+    cle:"tenir compte", faux:["prendre compte","faire compte","avoir compte"] },
+  { id:"faire-preuve", level:"C1", colloc:"faire preuve de", pos:"locution verbale", reg:"soutenu",
+    sens:"Manifester une qualité dans une situation.", ex:"Le candidat a fait preuve d'un grand sang-froid.", en:"to show, to display",
+    piege:"L'anglais dit « show courage ». Le calque « montrer preuve » est faux : la locution est « faire preuve de », suivie d'un nom de qualité.",
+    cle:"fait preuve", faux:["montré preuve","porté preuve","pris preuve"] },
+  { id:"rendre-hommage", level:"C1", colloc:"rendre hommage à", pos:"verbe + nom", reg:"soutenu",
+    sens:"Honorer publiquement quelqu'un.", ex:"Le président a rendu hommage aux victimes.", en:"to pay tribute to",
+    piege:"« Payer hommage » est un calque de « pay tribute ». On rend hommage (comme on rend visite ou service).",
+    cle:"rendu", faux:["payé","donné","versé"] },
+  { id:"remporter-succes", level:"C1", colloc:"remporter un succès", pos:"verbe + nom", reg:"neutre",
+    sens:"Obtenir une réussite ou une victoire.", ex:"Le film a remporté un franc succès auprès des jeunes.", en:"to achieve success, to win",
+    piege:"On ne « gagne » pas un succès. On remporte un succès, une victoire, un prix ; on connaît un succès.",
+    cle:"remporté", faux:["gagné","pris","touché"] },
+  { id:"emettre-hypothese", level:"C2", colloc:"émettre une hypothèse", pos:"verbe + nom", reg:"soutenu",
+    sens:"Proposer une explication qui reste à vérifier.", ex:"Les chercheurs émettent l'hypothèse d'un lien génétique.", en:"to put forward a hypothesis",
+    piege:"« Mettre en avant une hypothèse » est un calque. Avec hypothèse, on dit émettre, formuler ou avancer.",
+    cle:"émettent", faux:["créent","donnent","tirent"] },
+  { id:"nouer-liens", level:"C1", colloc:"nouer des liens", pos:"verbe + nom", reg:"neutre",
+    sens:"Créer des relations qui durent.", ex:"Ils ont noué des liens solides pendant leur stage.", en:"to build ties, to forge links",
+    piege:"« Construire des liens » est un calque de « build ». On noue ou on tisse des liens, comme un fil.",
+    cle:"noué", faux:["construit","bâti","produit"] },
+  { id:"exercer-profession", level:"C2", colloc:"exercer une profession", pos:"verbe + nom", reg:"soutenu",
+    sens:"Pratiquer un métier, surtout libéral ou réglementé.", ex:"Il exerce la profession d'avocat à Lyon.", en:"to practise a profession",
+    piege:"« Exercer » se dit d'une profession, d'une fonction, d'une influence ou d'un droit. « Pratiquer » vaut surtout pour un sport ou une activité.",
+    cle:"exerce", faux:["travaille","gère","tient"] },
+  { id:"porter-atteinte", level:"C2", colloc:"porter atteinte à", pos:"locution verbale", reg:"soutenu, juridique",
+    sens:"Nuire à un droit, une valeur ou une personne.", ex:"Ces mesures portent atteinte aux libertés individuelles.", en:"to harm, to undermine, to infringe",
+    piege:"Le verbe est toujours « porter ». On ne dit pas « causer atteinte à » ni « faire atteinte à ».",
+    cle:"portent", faux:["causent","font","donnent"] },
+  { id:"relever-defi", level:"C1", colloc:"relever un défi", pos:"verbe + nom", reg:"neutre",
+    sens:"Accepter une difficulté et chercher à la surmonter.", ex:"L'équipe a relevé le défi dans des délais très courts.", en:"to take up / to meet a challenge",
+    piege:"« Rencontrer un défi » est un calque. On relève un défi, comme on relève un gant.",
+    cle:"relevé", faux:["rencontré","trouvé","reçu"] },
+  { id:"echec-cuisant", level:"C2", colloc:"un échec cuisant", pos:"nom + adjectif", reg:"soutenu",
+    sens:"Un échec qui laisse une marque douloureuse.", ex:"La réforme s'est soldée par un échec cuisant.", en:"a bitter failure",
+    piege:"Pour « bitter », on ne dit pas « amer » ici. « Cuisant » s'emploie surtout avec échec, défaite, revers ou remords.",
+    cle:"cuisant", faux:["piquant","brûlant","salé"] },
+  { id:"argument-de-poids", level:"C1", colloc:"un argument de poids", pos:"nom + complément", reg:"soutenu",
+    sens:"Un argument qui pèse vraiment dans une discussion.", ex:"Le coût est un argument de poids contre ce projet.", en:"a strong, compelling argument",
+    piege:"« Un argument fort » (strong) se comprend, mais « de poids », « solide » ou « convaincant » sont plus idiomatiques.",
+    cle:"de poids", faux:["de force","de puissance","de masse"] },
+  { id:"debat-houleux", level:"C1", colloc:"un débat houleux", pos:"nom + adjectif", reg:"neutre",
+    sens:"Une discussion agitée, parfois tendue.", ex:"Le texte a été adopté après un débat houleux.", en:"a heated debate",
+    piege:"« Un débat chaud » est un calque de « heated ». On dit houleux, animé ou vif.",
+    cle:"houleux", faux:["chaud","bouillant","tiède"] },
+  { id:"coup-de-theatre", level:"C1", colloc:"un coup de théâtre", pos:"nom + complément", reg:"neutre",
+    sens:"Un retournement inattendu de situation.", ex:"L'enquête a connu un coup de théâtre avec l'arrivée d'un second témoin.", en:"a twist, a dramatic turn",
+    piege:"L'expression est figée : on ne la modifie pas (« un coup de scène » n'existe pas) et on ne traduit pas « twist » mot à mot.",
+    cle:"coup de théâtre", faux:["coup de scène","tour de théâtre","pli de théâtre"] },
+  { id:"sinquieter-de", level:"C1", colloc:"s'inquiéter de / pour", pos:"verbe + préposition", reg:"neutre",
+    sens:"Avoir de l'inquiétude.", ex:"Les parents s'inquiètent de l'avenir de leurs enfants.", en:"to worry about",
+    piege:"L'anglais n'a qu'une préposition (« about »). En français, « s'inquiéter DE » porte sur une situation, « s'inquiéter POUR » sur une personne.",
+    cle:"s'inquiètent de", faux:["s'inquiètent en","s'inquiètent à","s'inquiètent sur"] },
+  { id:"soulever-probleme", level:"C1", colloc:"soulever un problème", pos:"verbe + nom", reg:"neutre",
+    sens:"Faire apparaître une difficulté pour qu'on en discute.", ex:"Cet article soulève un vrai problème de méthode.", en:"to raise an issue",
+    piege:"« Lever un problème » est une faute : on lève un doute ou une interdiction, mais on soulève un problème, une objection ou une question.",
+    cle:"soulève", faux:["lève","élève","monte"] },
+  { id:"subir-pertes", level:"C1", colloc:"subir des pertes", pos:"verbe + nom", reg:"neutre",
+    sens:"Être touché par des dommages ou des échecs.", ex:"L'entreprise a subi de lourdes pertes en 2023.", en:"to suffer losses",
+    piege:"« Souffrir des pertes » est un calque de « suffer ». On subit des pertes, un échec ou des dommages ; « souffrir de » se dit d'une maladie ou d'un manque.",
+    cle:"subi", faux:["souffert","enduré","pâti"] },
+  { id:"nourrir-doutes", level:"C2", colloc:"nourrir des doutes", pos:"verbe + nom", reg:"soutenu",
+    sens:"Entretenir un sentiment ou une pensée sur la durée.", ex:"Il nourrit de sérieux doutes sur la faisabilité du projet.", en:"to harbour doubts",
+    piege:"« Abriter des doutes » est un calque. En français, on nourrit un espoir, des doutes, une ambition ou de la rancœur.",
+    cle:"nourrit", faux:["abrite","porte","tient"] },
+  { id:"lever-doute", level:"C1", colloc:"lever un doute", pos:"verbe + nom", reg:"neutre",
+    sens:"Faire disparaître une incertitude.", ex:"Ce témoignage a permis de lever tous les doutes.", en:"to remove a doubt",
+    piege:"On n'« enlève » ni ne « retire » un doute : on le lève (comme une ambiguïté, une interdiction ou une séance).",
+    cle:"lever", faux:["enlever","retirer","supprimer"] },
+  { id:"faire-etat", level:"C2", colloc:"faire état de", pos:"locution verbale", reg:"soutenu, administratif",
+    sens:"Mentionner ou signaler officiellement.", ex:"Le rapport fait état de plusieurs irrégularités.", en:"to report, to mention",
+    piege:"Locution figée, sans équivalent littéral : on ne peut pas remplacer « état » par « statut ». À ne pas confondre avec « être en état de ».",
+    cle:"fait état", faux:["fait statut","prend état","donne état"] },
+  { id:"accuser-reception", level:"C2", colloc:"accuser réception de", pos:"locution verbale", reg:"administratif",
+    sens:"Confirmer qu'on a bien reçu un envoi.", ex:"Nous accusons réception de votre dossier.", en:"to acknowledge receipt of",
+    piege:"« Reconnaître la réception » est un calque. Ici, « accuser » signifie « signaler que l'on a reçu ».",
+    cle:"accusons", faux:["reconnaissons","admettons","avouons"] },
+  { id:"donner-suite", level:"C1", colloc:"donner suite à", pos:"locution verbale", reg:"administratif",
+    sens:"Traiter une demande ou un courrier.", ex:"La direction n'a pas donné suite à ma demande.", en:"to follow up on, to act on",
+    piege:"« Faire suite à » existe mais signifie « venir après » (« Ce courrier fait suite à notre entretien »). Pour traiter une demande, on donne suite.",
+    cle:"donné suite", faux:["pris suite","mis suite","fait suivi"] },
+  { id:"tenir-rigueur", level:"C2", colloc:"tenir rigueur à quelqu'un de", pos:"locution verbale", reg:"soutenu",
+    sens:"Garder de la rancune pour une faute.", ex:"Je ne vous tiens pas rigueur de ce retard.", en:"to hold something against someone",
+    piege:"« Garder contre » est un calque de « hold against ». On tient rigueur, presque toujours à la forme négative.",
+    cle:"tiens", faux:["garde","porte","prends"] },
+  { id:"porter-plainte", level:"C1", colloc:"porter plainte", pos:"verbe + nom", reg:"juridique",
+    sens:"Déclarer officiellement qu'on est victime d'une infraction.", ex:"Elle a porté plainte contre son ancien employeur.", en:"to file a complaint",
+    piege:"« Faire une plainte » n'existe pas dans ce sens. On porte plainte ou on dépose plainte, sans article.",
+    cle:"porté", faux:["fait","écrit","rempli"] },
+  { id:"reussir-examen", level:"C1", colloc:"réussir un examen", pos:"verbe + nom", reg:"neutre",
+    sens:"Obtenir son examen.", ex:"Elle a passé son examen en mai et l'a brillamment réussi.", en:"to pass an exam",
+    piege:"Faux ami : « passer un examen » veut dire le faire, pas le réussir. Pour « to pass », on dit réussir ou être reçu à un examen.",
+    cle:"réussi", faux:["passé","gagné","remporté"] },
+  { id:"suivre-cours", level:"C1", colloc:"suivre un cours", pos:"verbe + nom", reg:"neutre",
+    sens:"Assister régulièrement à un enseignement.", ex:"Elle suit un cours de littérature comparée à la Sorbonne.", en:"to take a class",
+    piege:"« Prendre un cours » est un calque de « take a class ». On suit un cours ; on « assiste à » un cours, avec la préposition.",
+    cle:"suit", faux:["prend","attend","assiste"] },
+  { id:"atteindre-objectif", level:"C1", colloc:"atteindre un objectif", pos:"verbe + nom", reg:"neutre",
+    sens:"Parvenir au résultat visé.", ex:"L'entreprise a atteint son objectif de croissance.", en:"to meet a target",
+    piege:"« Rencontrer un objectif » est un calque de « meet ». On atteint, réalise ou remplit un objectif.",
+    cle:"atteint", faux:["rencontré","rejoint","croisé"] },
+  { id:"repondre-exigence", level:"C1", colloc:"répondre à une exigence", pos:"verbe + nom", reg:"neutre",
+    sens:"Satisfaire à ce qui est demandé.", ex:"Ce logement répond aux exigences de sécurité.", en:"to meet a requirement",
+    piege:"« Rencontrer des exigences » est un calque. On répond à une exigence, un besoin ou une attente.",
+    cle:"répond", faux:["rencontre","touche","croise"] },
+  { id:"combler-retard", level:"C1", colloc:"combler un retard", pos:"verbe + nom", reg:"neutre",
+    sens:"Rattraper ce qui manque pour égaler les autres.", ex:"Le pays cherche à combler son retard technologique.", en:"to close / to bridge a gap",
+    piege:"« Fermer un écart » est un calque de « close the gap ». On comble un retard, un déficit ou un fossé ; on réduit un écart.",
+    cle:"combler", faux:["fermer","clore","boucher"] },
+  { id:"creuser-inegalites", level:"C1", colloc:"creuser les inégalités", pos:"verbe + nom", reg:"neutre",
+    sens:"Rendre l'écart entre les groupes plus grand.", ex:"La crise a creusé les inégalités entre les régions.", en:"to widen inequalities",
+    piege:"« Élargir les inégalités » est un calque de « widen ». L'image française est celle d'un trou : on creuse un écart ou un fossé.",
+    cle:"creusé", faux:["agrandi","épaissi","allongé"] },
+  { id:"alimenter-polemique", level:"C1", colloc:"alimenter la polémique", pos:"verbe + nom", reg:"neutre",
+    sens:"Donner de nouveaux arguments à une querelle publique.", ex:"Ces déclarations ont alimenté la polémique.", en:"to fuel a controversy",
+    piege:"L'image est celle d'un feu qu'on alimente (ou qu'on attise) : une polémique, un débat, une rumeur. On ne la « chauffe » pas.",
+    cle:"alimenté", faux:["chauffé","rempli","versé"] },
+  { id:"mettre-en-oeuvre", level:"C1", colloc:"mettre en œuvre", pos:"locution verbale", reg:"soutenu",
+    sens:"Appliquer concrètement un plan ou une décision.", ex:"Le gouvernement mettra en œuvre la réforme dès janvier.", en:"to implement",
+    piege:"« Implémenter » est un anglicisme à éviter hors informatique. On met en œuvre un plan, une réforme, une mesure.",
+    cle:"mettra en œuvre", faux:["implémentera","exécutera","opérera"] },
+  { id:"faire-objet", level:"C1", colloc:"faire l'objet de", pos:"locution verbale", reg:"soutenu",
+    sens:"Être soumis à une action (enquête, critique, accord).", ex:"Ce projet fait l'objet d'une enquête.", en:"to be the subject of",
+    piege:"« Être le sujet de » est un calque : la locution est figée, avec le verbe « faire ».",
+    cle:"fait l'objet", faux:["est le sujet","prend l'objet","a l'objet"] },
+  { id:"preter-attention", level:"C1", colloc:"prêter attention à", pos:"verbe + nom", reg:"neutre",
+    sens:"Regarder ou écouter avec soin.", ex:"Il faut prêter attention aux détails du contrat.", en:"to pay attention to",
+    piege:"« Payer attention » est un calque de « pay attention ». On prête attention (ou on fait attention).",
+    cle:"prêter", faux:["payer","verser","régler"] },
+  { id:"rendre-visite", level:"C1", colloc:"rendre visite à", pos:"verbe + nom", reg:"neutre",
+    sens:"Aller voir quelqu'un chez lui ou là où il est.", ex:"Il a rendu visite à sa grand-mère pendant les vacances.", en:"to pay a visit to",
+    piege:"« Payer une visite » est un calque. On rend visite à une personne et on visite un lieu.",
+    cle:"rendu", faux:["payé","donné","versé"] },
+  { id:"poser-bases", level:"C1", colloc:"poser les bases", pos:"verbe + nom", reg:"soutenu",
+    sens:"Créer le fondement d'une construction ou d'un projet.", ex:"Ce traité a posé les bases de la coopération européenne.", en:"to lay the foundations",
+    piege:"« Mettre les bases » est un calque de « lay ». On pose ou on jette les bases, on pose la première pierre.",
+    cle:"posé", faux:["mis","couché","fait"] },
+  { id:"fervent-defenseur", level:"C1", colloc:"un fervent défenseur", pos:"adjectif + nom", reg:"soutenu",
+    sens:"Quelqu'un qui défend une cause avec ardeur.", ex:"C'est un fervent défenseur du service public.", en:"a staunch defender",
+    piege:"« Un fort défenseur » est un calque de « strong ». On dit fervent, ardent ou farouche défenseur.",
+    cle:"fervent", faux:["fort","dur","gros"] },
+  { id:"soutien-indefectible", level:"C2", colloc:"un soutien indéfectible", pos:"nom + adjectif", reg:"soutenu",
+    sens:"Un appui qui ne faiblit jamais.", ex:"Nous remercions nos donateurs de leur soutien indéfectible.", en:"unwavering support",
+    piege:"« Indéfectible » qualifie un soutien, une fidélité ou un attachement. On ne dit pas « soutien incassable ».",
+    cle:"indéfectible", faux:["incassable","imbrisable","insoutenable"] },
+  { id:"lourd-de-consequences", level:"C1", colloc:"lourd de conséquences", pos:"adjectif + de + nom", reg:"soutenu",
+    sens:"Qui aura de graves suites.", ex:"Cette décision est lourde de conséquences pour l'économie.", en:"with serious consequences",
+    piege:"Schéma figé « lourd de + nom » (lourd de menaces, de sens, de conséquences) : il remplace la tournure longue « qui a de lourdes conséquences ».",
+    cle:"lourde", faux:["pesante","épaisse","grasse"] },
+  { id:"manque-criant", level:"C1", colloc:"un manque criant", pos:"nom + adjectif", reg:"soutenu",
+    sens:"Une insuffisance impossible à ignorer.", ex:"On constate un manque criant de médecins dans les campagnes.", en:"a glaring shortage",
+    piege:"« Hurlant » ou « bruyant » ne conviennent pas. « Criant » s'emploie pour un manque, une injustice ou une vérité.",
+    cle:"criant", faux:["hurlant","bruyant","aboyant"] },
+  { id:"tomber-d-accord", level:"C1", colloc:"tomber d'accord", pos:"locution verbale", reg:"courant",
+    sens:"Finir par s'entendre sur un point.", ex:"Les deux parties sont tombées d'accord sur un calendrier.", en:"to reach an agreement",
+    piege:"« Atteindre un accord » est un calque. On tombe d'accord, ou on parvient à un accord.",
+    cle:"tombées", faux:["arrivées","atteintes","venues"] },
+  { id:"faire-le-point", level:"C1", colloc:"faire le point", pos:"locution verbale", reg:"courant",
+    sens:"Résumer où en est une situation.", ex:"Le ministre a fait le point sur la situation.", en:"to take stock, to give an update",
+    piege:"« Prendre le point » n'existe pas. On fait le point sur une situation, un dossier ou un projet.",
+    cle:"fait le point", faux:["pris le point","donné le point","mis le point"] },
+  { id:"tirer-parti", level:"C1", colloc:"tirer parti de", pos:"locution verbale", reg:"soutenu",
+    sens:"Utiliser une situation à son profit.", ex:"Elle a su tirer parti de cette expérience.", en:"to take advantage of",
+    piege:"« Prendre avantage de » est un calque. On tire parti ou profit d'une situation.",
+    cle:"tirer parti", faux:["prendre avantage","faire profit","donner parti"] },
+  { id:"emettre-reserves", level:"C2", colloc:"émettre des réserves", pos:"verbe + nom", reg:"soutenu",
+    sens:"Exprimer des doutes ou des objections prudentes.", ex:"Le comité a émis des réserves sur le calendrier.", en:"to voice reservations",
+    piege:"« Mettre des réserves » est un calque. On émet ou on formule des réserves.",
+    cle:"émis", faux:["mis","jeté","tenu"] },
+  { id:"avoir-recours", level:"C1", colloc:"avoir recours à", pos:"locution verbale", reg:"soutenu",
+    sens:"Utiliser un moyen faute de mieux.", ex:"Le gouvernement a eu recours à un emprunt.", en:"to resort to",
+    piege:"Pas de calque verbal : l'anglais « resort to » se rend par « avoir recours à » ou « recourir à ». Attention à la préposition « à ».",
+    cle:"recours", faux:["retour","lien","contact"] }
+];
+
+const CS = { mode:"cartes", card:0, flipped:false, only:false, quiz:null, qlen:10, known: store.get("knownColloc",{}) };
+const collocSave = () => store.set("knownColloc", CS.known);
+function renderColloc(){
+  const all = byLevel(DATA.colloc), known = all.filter(x=>CS.known[x.id]).length;
+  const head = `<div class="row" style="margin-top:18px;align-items:center"><button class="btn" id="c-back" style="padding:6px 12px">← Thèmes</button></div>
+  <h2 style="margin-top:12px">Collocations</h2><p class="sub">${all.length} associations de mots, avec le piège de traduction depuis l'anglais.</p>
+  <div class="row" style="margin-bottom:12px;align-items:flex-end">
+    <div class="row" role="group" aria-label="Affichage">
+      ${[["cartes","Cartes"],["liste","Liste"],["quiz","Quiz"]].map(([k,l])=>`<button class="btn" data-cmode="${k}" style="padding:6px 12px;${CS.mode===k?'border-color:var(--encre);color:var(--encre)':''}">${l}</button>`).join("")}
+    </div>
+  </div>
+  <div class="row" style="margin-bottom:12px">
+    <div class="progress" aria-label="Collocations acquises"><i style="width:${all.length?known/all.length*100:0}%"></i></div>
+    <span class="counter">${known} / ${all.length} acquises</span>
+  </div>`;
+  const bind = () => {
+    document.getElementById("c-back").onclick=()=>{ state.vhome=true; state.themeV="all"; renderVocab(); window.scrollTo(0,0); };
+    view.querySelectorAll("[data-cmode]").forEach(b=>b.onclick=()=>{ CS.mode=b.dataset.cmode; CS.flipped=false; renderColloc(); });
+  };
+  const trap = c => `<p class="trap"><b>Piège :</b> ${c.piege}</p>`;
+  const meta = c => `<div class="meta"><span class="chip">${c.level}</span><span class="eyebrow">${c.pos} · ${c.reg}</span>${CS.known[c.id]?'<span class="chip" style="background:var(--ok-soft);color:var(--ok)">acquise</span>':""}</div>`;
+
+  if(!all.length){ view.innerHTML = head + '<p class="empty">Aucune collocation pour ce niveau.</p>'; bind(); return; }
+
+  if(CS.mode==="quiz"){ renderCQuiz(head, all, bind); return; }
+
+  if(CS.mode==="liste"){
+    view.innerHTML = head + `<div class="stack">${all.map(c=>`
+      <div class="sheet" style="padding-block:12px">${meta(c)}
+        <b style="font:400 1.1rem var(--f-display)">${c.colloc}</b>${c.en?` <span class="note">· EN : ${c.en}</span>`:""}
+        <p style="margin:2px 0">${c.sens}</p><p class="example note" style="margin:0">« ${c.ex} »</p>${trap(c)}
+      </div>`).join("")}</div>`;
+    bind(); return;
+  }
+
+  const items = CS.only ? all.filter(x=>!CS.known[x.id]) : all;
+  if(!items.length){
+    view.innerHTML = head + `<p class="empty">Toutes les collocations sont acquises. <button class="btn" id="c-resetk" style="margin-left:6px">Tout revoir</button></p>`;
+    bind();
+    document.getElementById("c-resetk").onclick=()=>{ all.forEach(x=>delete CS.known[x.id]); collocSave(); CS.only=false; renderColloc(); };
+    return;
+  }
+  if(CS.card>=items.length) CS.card=0;
+  const c = items[CS.card];
+  view.innerHTML = head + `
+  <div class="row" style="justify-content:space-between;margin-bottom:8px">
+    <span class="counter">${CS.card+1} / ${items.length}</span>
+    <label class="note" style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" id="c-only" ${CS.only?"checked":""}> Seulement celles à revoir</label>
+  </div>
+  <div class="sheet card" id="cflash" tabindex="0" role="button" aria-label="Retourner la carte">
+    ${meta(c)}
+    ${CS.flipped
+      ? `<div class="word" style="font-size:1.2rem">${c.colloc}</div><p class="example">« ${c.ex} »</p>${trap(c)}`
+      : `<p class="qprompt" style="margin:6px 0">${c.sens}</p>${c.en?`<p class="note" style="margin:0">EN : ${c.en}</p>`:""}<span class="hint">Touchez pour la collocation</span>`}
+  </div>
+  <div class="row" style="margin-top:12px">
+    <button class="btn" id="c-again">À revoir</button>
+    <button class="btn good" id="c-known">Je savais</button>
+    <button class="btn" id="c-shuffle" style="margin-left:auto">Mélanger</button>
+  </div>`;
+  bind();
+  const flip=()=>{ CS.flipped=!CS.flipped; renderColloc(); };
+  document.getElementById("cflash").onclick=flip;
+  document.getElementById("cflash").onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); flip(); } };
+  document.getElementById("c-only").onchange=e=>{ CS.only=e.target.checked; CS.card=0; CS.flipped=false; renderColloc(); };
+  const next=(k)=>{ CS.known[c.id]=k; collocSave(); CS.flipped=false;
+    if(!(k && CS.only)) CS.card=(CS.card+1)%items.length; renderColloc(); };
+  document.getElementById("c-again").onclick=()=>next(false);
+  document.getElementById("c-known").onclick=()=>next(true);
+  document.getElementById("c-shuffle").onclick=()=>{ DATA.colloc.sort(()=>Math.random()-.5); CS.card=0; CS.flipped=false; renderColloc(); };
+}
+
+function renderCQuiz(head, pool, bind){
+  if(pool.length<2){ view.innerHTML = head+'<p class="empty">Pas assez de collocations pour un quiz.</p>'; bind(); return; }
+  const key = state.level+"|"+CS.qlen;
+  if(!CS.quiz || CS.quiz.key!==key){
+    const qs = shuffle(pool).slice(0,CS.qlen).map(c=>({ c,
+      prompt: c.ex.replace(c.cle,"<span class='gap'>……</span>"),
+      opts: shuffle([{t:c.cle,ok:true},...c.faux.map(t=>({t,ok:false}))]) }));
+    CS.quiz = { key, qs, i:0, score:0, picked:null, missed:[] };
+  }
+  const Q = CS.quiz;
+  if(Q.i>=Q.qs.length){
+    view.innerHTML = head + `<div class="sheet" style="text-align:left">
+      <div class="eyebrow">Résultat</div>
+      <div class="word" style="font-variant-numeric:tabular-nums">${Q.score} / ${Q.qs.length}</div>
+      <p class="note" style="margin:4px 0 10px">${Q.score===Q.qs.length?"Sans faute.":Q.missed.length+" collocation(s) ajoutée(s) à « à revoir »."}</p>
+      ${Q.missed.length?`<ul style="padding-left:18px;margin:0 0 12px">${Q.missed.map(c=>`<li><b>${c.colloc}</b> : ${c.sens}</li>`).join("")}</ul>`:""}
+      <button class="btn primary" id="cq-new">Nouveau quiz</button></div>`;
+    bind(); document.getElementById("cq-new").onclick=()=>{ CS.quiz=null; renderColloc(); }; return;
+  }
+  const q = Q.qs[Q.i], done = Q.picked!==null;
+  view.innerHTML = head + `
+  <div class="row" role="group" aria-label="Nombre de questions" style="margin-bottom:10px">
+    <span class="eyebrow">Questions</span>
+    ${[10,20,40].map(n=>`<button class="btn" data-cqlen="${n}" style="padding:4px 10px;${CS.qlen===n?'border-color:var(--encre);color:var(--encre)':''}">${n}</button>`).join("")}
+  </div>
+  <div class="row" style="justify-content:space-between;margin-bottom:8px">
+    <span class="counter">Question ${Q.i+1} / ${Q.qs.length}</span><span class="counter" style="color:var(--ok)">${Q.score} bonne(s)</span>
+  </div>
+  <div class="sheet">
+    <div class="meta"><span class="chip">${q.c.level}</span><span class="eyebrow">Complétez la phrase</span></div>
+    <p class="qprompt">${q.prompt}</p>
+    <div class="stack" style="gap:8px">${q.opts.map((o,j)=>{
+      const cls = done ? (o.ok?"right":(Q.picked===j?"wrong":"")) : "";
+      return `<button class="qopt ${cls}" data-o="${j}" ${done?"disabled":""}>${o.t}</button>`; }).join("")}</div>
+    ${done?`<p class="example note" style="margin:12px 0 0"><b>${q.c.colloc}</b>${q.c.en?" · EN : "+q.c.en:""}</p><p class="trap"><b>Piège :</b> ${q.c.piege}</p>
+      <div class="row" style="margin-top:12px"><button class="btn primary" id="cq-next">${Q.i+1<Q.qs.length?"Suivant":"Voir le résultat"}</button></div>`:""}
+  </div>`;
+  bind();
+  view.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{
+    const j=+b.dataset.o; Q.picked=j;
+    if(q.opts[j].ok) Q.score++; else { Q.missed.push(q.c); CS.known[q.c.id]=false; collocSave(); }
+    renderColloc(); });
+  const n=document.getElementById("cq-next"); if(n) n.onclick=()=>{ Q.i++; Q.picked=null; renderColloc(); };
+  view.querySelectorAll("[data-cqlen]").forEach(b=>b.onclick=()=>{ CS.qlen=+b.dataset.cqlen; CS.quiz=null; renderColloc(); });
 }
 
 /* ---------- Quiz ---------- */
