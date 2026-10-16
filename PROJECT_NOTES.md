@@ -20,7 +20,7 @@
 - 1 410 mots et expressions en 30 thèmes.
 - 14 textes d'écoute avec transcription synchronisée.
 - Quiz.
-- **[Fait]** 50 collocations : cartes, liste, quiz (publiées en v10).
+- **[Fait]** 70 collocations (50 + 20 ajoutées en v12, non commitées ni publiées) : cartes, liste, quiz.
 - **[Fait, non publié]** L'onglet Vocabulaire a trois sous-onglets : Thèmes (29 thèmes, 1 312 entrées), Expressions (le thème « Expressions », 100 entrées) et Collocations (50 fiches). Vue compacte disponible dans les listes. Voir section 6bis.
 - Onglet Examen : entraînement en séries, examen blanc au format officiel, méthode de l'écrit.
 - Fonctionnement hors ligne et installation sur l'écran d'accueil.
@@ -29,7 +29,7 @@
 | Fichier | Rôle |
 |---|---|
 | `index.html` | Toute l'application |
-| `sw.js` | Cache hors ligne. `VERSION` (actuellement `cahier-dalf-v11`, modifiée localement, pas encore publiée) est à incrémenter à chaque mise à jour |
+| `sw.js` | Cache hors ligne. `VERSION` (actuellement `cahier-dalf-v12`, modifiée localement, pas encore commitée ni publiée) est à incrémenter à chaque mise à jour |
 | `manifest.webmanifest` | Informations d'installation |
 | `icons/` | Icônes de l'application |
 | `README.md` | Présentation courte du projet |
@@ -53,7 +53,7 @@
 ## 6. Section Collocations (ajoutée, non commitée ni publiée)
 **[Fait]** Modifications locales, vérifiées avec `git diff` :
 - `index.html` (+329 lignes, 1 ligne modifiée) :
-  - `DATA.colloc` : 50 fiches (39 C1, 11 C2). Champs : `id` (stable), `level`, `colloc`, `pos`, `reg`, `sens`, `ex`, `en`, `piege`, `cle` (partie de l'exemple masquée dans le quiz), `faux` (3 mauvaises réponses).
+  - `DATA.colloc` : 70 fiches (52 C1, 18 C2 ; les 50 premières : 39 C1, 11 C2 ; la série 2 : 13 C1, 7 C2). Champs : `id` (stable), `level`, `colloc`, `pos`, `reg`, `sens`, `ex`, `en`, `piege`, `cle` (partie de l'exemple masquée dans le quiz), `faux` (3 mauvaises réponses).
   - `renderColloc()` (cartes, liste) et `renderCQuiz()` (quiz), placées juste avant la section « Quiz ».
   - Une tuile « Collocations » sur l'accueil du Vocabulaire (`collocTile()`), et une ligne au début de `renderVocab()` qui redirige vers `renderColloc()` quand `state.themeV === "__colloc"`.
   - Une classe CSS `.trap` pour l'encadré « Piège ».
@@ -65,7 +65,7 @@
 - Les 4 onglets s'affichent sans erreur JavaScript.
 - Tuile, cartes, retournement, « Je savais » / « À revoir », liste (50 fiches), quiz de 10 questions, retour, filtre C1/C2.
 - Une progression `known` préexistante reste intacte après usage des collocations.
-- Contrôle automatique des données : 50 identifiants uniques, l'exemple de chaque fiche contient exactement une fois la partie masquée, 3 mauvaises réponses par fiche.
+- Contrôle automatique des données (refait sur 70 fiches pour la série 2, structure, identifiants uniques, `cle` présente une fois dans l'exemple, 3 mauvaises réponses, syntaxe JavaScript ; pas de test dans un navigateur) : 70 identifiants uniques, l'exemple de chaque fiche contient exactement une fois la partie masquée, 3 mauvaises réponses par fiche.
 
 **[Non vérifié]**
 - Service worker, mise en cache et mode hors ligne : le test automatique n'a pas pu confirmer l'enregistrement du service worker. À tester à la main (voir section 7).
@@ -83,6 +83,10 @@
 
 **[Fait] Tests** (Chrome sans interface, copie du site, progression préexistante injectée avant le chargement) : 4 onglets sans erreur, 3 sous-onglets, compteurs (1 312 / 100 / 50, soit 1 412 entrées de vocabulaire), mots acquis conservés (« étayer », « un cercle vicieux »), listes détaillées et compactes, filtre C2 (32 expressions), quiz des 3 sous-onglets.
 **[Non vérifié]** Service worker / hors ligne, rendu visuel et mobile, mode sombre.
+
+## 6ter. Série 2 de collocations (modifications locales, non commitées)
+**[Fait]** (`index.html`, `sw.js`) : 20 fiches ajoutées à la fin de `DATA.colloc` (même format, aucune fiche existante modifiée) : assumer ses responsabilités, jouer un rôle déterminant, essuyer un revers, jeter un froid, trancher la question, avoir gain de cause, faire fi de, mettre en garde contre, mettre en lumière, se heurter à, soulever un tollé, faire barrage à, prendre ses distances avec, donner le coup d'envoi, mettre un terme à, avoir voix au chapitre, faire pencher la balance, marquer un tournant, faire l'unanimité, rompre le silence. `sw.js` : `VERSION` = `cahier-dalf-v12`.
+**[Non vérifié]** Pas de test dans un navigateur ; pas de contrôle sur dictionnaire ou corpus (relecture linguistique à faire, notamment pour les « pièges »).
 
 ## 7. Points linguistiques à faire relire (incertains, rien n'a été corrigé)
 Plusieurs « pièges » parlent de calques de l'anglais sans source. Certaines mauvaises réponses du quiz pourraient passer pour correctes :
