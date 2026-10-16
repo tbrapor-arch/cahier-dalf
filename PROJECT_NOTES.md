@@ -20,7 +20,8 @@
 - 1 410 mots et expressions en 30 thèmes.
 - 14 textes d'écoute avec transcription synchronisée.
 - Quiz.
-- **[Fait, non publié]** 50 collocations (mode « Collocations » dans l'onglet Vocabulaire) : cartes, liste, quiz. Voir section 6.
+- **[Fait]** 50 collocations : cartes, liste, quiz (publiées en v10).
+- **[Fait, non publié]** L'onglet Vocabulaire a trois sous-onglets : Thèmes (29 thèmes, 1 312 entrées), Expressions (le thème « Expressions », 100 entrées) et Collocations (50 fiches). Vue compacte disponible dans les listes. Voir section 6bis.
 - Onglet Examen : entraînement en séries, examen blanc au format officiel, méthode de l'écrit.
 - Fonctionnement hors ligne et installation sur l'écran d'accueil.
 
@@ -28,7 +29,7 @@
 | Fichier | Rôle |
 |---|---|
 | `index.html` | Toute l'application |
-| `sw.js` | Cache hors ligne. `VERSION` (actuellement `cahier-dalf-v10`, modifiée localement, pas encore publiée) est à incrémenter à chaque mise à jour |
+| `sw.js` | Cache hors ligne. `VERSION` (actuellement `cahier-dalf-v11`, modifiée localement, pas encore publiée) est à incrémenter à chaque mise à jour |
 | `manifest.webmanifest` | Informations d'installation |
 | `icons/` | Icônes de l'application |
 | `README.md` | Présentation courte du projet |
@@ -70,6 +71,18 @@
 - Service worker, mise en cache et mode hors ligne : le test automatique n'a pas pu confirmer l'enregistrement du service worker. À tester à la main (voir section 7).
 - Affichage visuel (mise en page, mode sombre, mobile) : aucune capture d'écran examinée.
 - Aucun contrôle linguistique sur dictionnaire ou corpus.
+
+## 6bis. Sous-onglets du Vocabulaire (modifications locales, non commitées)
+**[Fait]** (`index.html`, `sw.js`) :
+- Barre de sous-onglets « Thèmes | Expressions | Collocations » (même style que Structures). Les entrées du thème « Expressions » (100 : 68 C1, 32 C2) n'apparaissent plus dans « Thèmes » ; rien n'est dupliqué ni supprimé dans `DATA.vocab`.
+- La tuile « Collocations » et le thème interne `"__colloc"` ont été retirés ; le bouton « ← Thèmes » n'existe plus pour Expressions et Collocations.
+- Mode « Liste » : bascule fiches détaillées / vue compacte (lignes dépliables, comme Structures) dans les 3 sous-onglets.
+- Nouvelles clés `localStorage` : `vsub` (dernier sous-onglet), `vcompact` (Thèmes et Expressions), `ccompact` (Collocations). Les clés `known` et `knownColloc` sont inchangées.
+- Quiz : aucun quiz ajouté ni supprimé. Le quiz existant utilise le contenu du sous-onglet affiché.
+- `sw.js` : `VERSION` = `cahier-dalf-v11`.
+
+**[Fait] Tests** (Chrome sans interface, copie du site, progression préexistante injectée avant le chargement) : 4 onglets sans erreur, 3 sous-onglets, compteurs (1 312 / 100 / 50, soit 1 412 entrées de vocabulaire), mots acquis conservés (« étayer », « un cercle vicieux »), listes détaillées et compactes, filtre C2 (32 expressions), quiz des 3 sous-onglets.
+**[Non vérifié]** Service worker / hors ligne, rendu visuel et mobile, mode sombre.
 
 ## 7. Points linguistiques à faire relire (incertains, rien n'a été corrigé)
 Plusieurs « pièges » parlent de calques de l'anglais sans source. Certaines mauvaises réponses du quiz pourraient passer pour correctes :

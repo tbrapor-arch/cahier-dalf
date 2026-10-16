@@ -2110,6 +2110,8 @@ const store = {
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} }
 };
 let state = { tab: store.get("tab","structures"), level: store.get("level","all"), known: store.get("known",{}), card:0, flipped:false, rate:0.9, heard:false, checked:false, answers:{}, pe:"synthese", themeS:"all", vhome:true, exsub: store.get("exsub","train"), exType:null, exRun:null, prog: store.get("prog",{}), paused:null, blancOpen:null, oralI: store.get("oralI",0), c2oi: store.get("c2oi",0), mopen:null, exlvl: store.get("exlvl","C1"), c2i: store.get("c2i",0), checks: store.get("checks",{}), sujetI: store.get("sujetI",0), lang: store.get("lang","fr"), follow: store.get("follow",true), smode:"fiches", gram:null, glen:20, scompact: store.get("scompact",false), squiz:null, qlen:10, themeV:"all", vmode:"cartes", onlyReview:false, playing:null, drafts: store.get("drafts",{}) };
+state.vsub = ["themes","expr","coll"].includes(store.get("vsub","themes")) ? store.get("vsub","themes") : "themes";
+state.vcompact = store.get("vcompact",false); state.ccompact = store.get("ccompact",false);
 const view = document.getElementById("view");
 const byLevel = arr => arr.filter(x => state.level==="all" || x.level===state.level);
 const exChip = '<span class="chip ex">exemple</span>';
@@ -2252,24 +2254,45 @@ function renderSQuiz(head, pool, bind){
   const n=document.getElementById("sq-next"); if(n) n.onclick=()=>{ Q.i++; Q.picked=null; renderStructures(); };
 }
 
-const collocTile = () => { const cl=byLevel(DATA.colloc), k=cl.filter(x=>CS.known[x.id]).length;
-  return `<button class="vtile" data-vt="__colloc"><b>Collocations</b><span class="counter">${cl.length} associations · ${k} acquises</span><div class="progress"><i style="width:${cl.length?k/cl.length*100:0}%"></i></div></button>`; };
+/* ---------- Vocabulaire : sous-onglets Thèmes / Expressions / Collocations ---------- */
+const VSUBS = [["themes","Thèmes"],["expr","Expressions"],["coll","Collocations"]];
+const vsubBar = () => `<div class="subtabs" role="tablist" aria-label="Sections du vocabulaire">${VSUBS.map(([k,l])=>`<button role="tab" data-vsub="${k}" aria-selected="${state.vsub===k}">${l}</button>`).join("")}</div>`;
+const bindVsub = () => view.querySelectorAll("[data-vsub]").forEach(b=>b.onclick=()=>{
+  state.vsub=b.dataset.vsub; store.set("vsub",state.vsub);
+  state.quiz=null; state.card=0; state.flipped=false; CS.quiz=null; CS.card=0; CS.flipped=false;
+  render(); window.scrollTo(0,0); });
+const ICON_CARDS = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/></svg>';
+const ICON_LIST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="5" cy="6" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="18" r="1"/></svg>';
+const viewToggle = (idCards, idCompact, compact) => `<div class="itoggle" role="group" aria-label="Affichage de la liste"><button id="${idCards}" aria-pressed="${!compact}" aria-label="Fiches détaillées" title="Fiches détaillées">${ICON_CARDS}</button><button id="${idCompact}" aria-pressed="${compact}" aria-label="Vue compacte" title="Vue compacte">${ICON_LIST}</button></div>`;
+const isExprV = v => v.theme==="Expressions";
+const vPool = () => DATA.vocab.filter(v => state.vsub==="expr" ? isExprV(v) : !isExprV(v));
+const knownChip = '<span class="chip" style="background:var(--ok-soft);color:var(--ok)">acquis</span>';
+
 function renderVocab(){
-  if(state.themeV==="__colloc" && !state.vhome){ renderColloc(); return; }
-  if(state.themeV!=="all" && !themesOf(DATA.vocab).includes(state.themeV)) state.themeV="all";
-  let items = byTheme(DATA.vocab, state.themeV);
+  if(state.vsub==="coll"){ renderColloc(); return; }
+  const expr = state.vsub==="expr", pool = vPool();
+  if(expr) state.themeV="all";
+  else if(state.themeV!=="all" && !themesOf(pool).includes(state.themeV)) state.themeV="all";
+  const home = state.vhome && !expr;
+  let items = byTheme(pool, state.themeV);
   if(state.onlyReview) items = items.filter(x=>!state.known[x.word]);
-  const all = byTheme(DATA.vocab, state.themeV), known = all.filter(x=>state.known[x.word]).length;
-  if(state.vhome){
-    const lv = byLevel(DATA.vocab), tile=(t,label,arr,cls="")=>{ const k=arr.filter(x=>state.known[x.word]).length;
+  const all = byTheme(pool, state.themeV), known = all.filter(x=>state.known[x.word]).length;
+  const top = `<h2>Vocabulaire</h2>${vsubBar()}`;
+  if(home){
+    const lv = byLevel(pool), tile=(t,label,arr,cls="")=>{ const k=arr.filter(x=>state.known[x.word]).length;
       return `<button class="vtile ${cls}" data-vt="${t}"><b>${label}</b><span class="counter">${arr.length} mots · ${k} acquis</span><div class="progress"><i style="width:${arr.length?k/arr.length*100:0}%"></i></div></button>`; };
-    view.innerHTML = `<h2>Vocabulaire</h2><p class="sub">${lv.length} mots et expressions. Choisissez un thème.</p>
-    <div class="vgrid">${tile("all","Tous les thèmes",lv,"all")}${collocTile()}${themesOf(DATA.vocab).map(t=>tile(t,t,lv.filter(x=>x.theme===t))).join("")}</div>`;
+    view.innerHTML = top + `<p class="sub">${lv.length} mots et locutions. Choisissez un thème.</p>
+    <div class="vgrid">${tile("all","Tous les thèmes",lv,"all")}${themesOf(pool).map(t=>tile(t,t,lv.filter(x=>x.theme===t))).join("")}</div>`;
     view.querySelectorAll("[data-vt]").forEach(b=>b.onclick=()=>{ state.themeV=b.dataset.vt; state.vhome=false; state.card=0; state.flipped=false; state.quiz=null; renderVocab(); window.scrollTo(0,0); });
+    bindVsub();
     return;
   }
-  const head = `<div class="row" style="margin-top:18px;align-items:center"><button class="btn" id="v-back" style="padding:6px 12px">← Thèmes</button></div>
-  <h2 style="margin-top:12px">${state.themeV==="all"?"Tous les thèmes":state.themeV}</h2><p class="sub">${all.length} mots et expressions, avec registre, définition et exemple.</p>
+  const title = expr ? "Expressions" : (state.themeV==="all"?"Tous les thèmes":state.themeV);
+  const back = expr ? "" : `<div class="row" style="margin-top:4px;align-items:center"><button class="btn" id="v-back" style="padding:6px 12px">← Thèmes</button></div>`;
+  const tgl = state.vmode==="liste" ? `<div class="tools">${viewToggle("v-cards","v-compact",state.vcompact)}</div>` : "";
+  const head = `${top}${back}
+  <h3 style="margin:12px 0 0;font:400 1.15rem var(--f-display)">${title}</h3>
+  <div class="toolbar" style="margin-top:4px"><p class="sub" style="margin:0">${all.length} ${expr?"expressions":"mots et locutions"}, avec registre, définition et exemple.</p>${tgl}</div>
   <div class="row" style="margin-bottom:12px;align-items:flex-end">
     <div class="row" role="group" aria-label="Affichage">
       ${[["cartes","Cartes"],["liste","Liste"],["quiz","Quiz"]].map(([k,l])=>`<button class="btn" data-mode="${k}" style="padding:6px 12px;${state.vmode===k?'border-color:var(--encre);color:var(--encre)':''}">${l}</button>`).join("")}
@@ -2280,18 +2303,28 @@ function renderVocab(){
     <span class="counter">${known} / ${all.length} acquis</span>
   </div>`;
   const bind = () => {
-    document.getElementById("v-back").onclick=()=>{ state.vhome=true; renderVocab(); window.scrollTo(0,0); };
+    const bk=document.getElementById("v-back"); if(bk) bk.onclick=()=>{ state.vhome=true; renderVocab(); window.scrollTo(0,0); };
     view.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{ state.vmode=b.dataset.mode; renderVocab(); });
+    const c1=document.getElementById("v-cards"); if(c1) c1.onclick=()=>{ state.vcompact=false; store.set("vcompact",false); renderVocab(); };
+    const c2=document.getElementById("v-compact"); if(c2) c2.onclick=()=>{ state.vcompact=true; store.set("vcompact",true); renderVocab(); };
+    bindVsub();
   };
 
   if(state.vmode==="quiz"){ renderQuiz(head, all, bind); return; }
   if(state.vmode==="liste"){
-    view.innerHTML = head + `<div class="stack">${all.map(v=>`
-      <div class="sheet" style="padding-block:12px">
-        <div class="meta"><span class="chip">${v.level}</span><span class="eyebrow">${v.reg}</span>${state.known[v.word]?'<span class="chip" style="background:var(--ok-soft);color:var(--ok)">acquis</span>':""}</div>
-        <b style="font:400 1.1rem var(--f-display)">${v.word}</b>
-        <p style="margin:2px 0">${v.def}</p><p class="example note" style="margin:0">« ${v.ex} »</p>
-      </div>`).join("")}</div>`;
+    if(state.vcompact){
+      view.innerHTML = head + `<div class="clist">${all.map(v=>`<details class="crow">
+        <summary><span class="chip">${v.level}</span><span class="cname">${v.word}</span>${state.known[v.word]?knownChip:""}</summary>
+        <div class="cbody"><p class="eyebrow" style="margin:0 0 4px">${v.theme} · ${v.reg}</p><p style="margin:0 0 6px">${v.def}</p><p class="example note" style="margin:0">« ${v.ex} »</p></div>
+      </details>`).join("") || '<p class="empty">Aucun mot pour ce niveau.</p>'}</div>`;
+    } else {
+      view.innerHTML = head + `<div class="stack">${all.map(v=>`
+        <div class="sheet" style="padding-block:12px">
+          <div class="meta"><span class="chip">${v.level}</span><span class="eyebrow">${v.reg}</span>${state.known[v.word]?knownChip:""}</div>
+          <b style="font:400 1.1rem var(--f-display)">${v.word}</b>
+          <p style="margin:2px 0">${v.def}</p><p class="example note" style="margin:0">« ${v.ex} »</p>
+        </div>`).join("")}</div>`;
+    }
     bind(); return;
   }
 
@@ -2540,8 +2573,10 @@ const CS = { mode:"cartes", card:0, flipped:false, only:false, quiz:null, qlen:1
 const collocSave = () => store.set("knownColloc", CS.known);
 function renderColloc(){
   const all = byLevel(DATA.colloc), known = all.filter(x=>CS.known[x.id]).length;
-  const head = `<div class="row" style="margin-top:18px;align-items:center"><button class="btn" id="c-back" style="padding:6px 12px">← Thèmes</button></div>
-  <h2 style="margin-top:12px">Collocations</h2><p class="sub">${all.length} associations de mots, avec le piège de traduction depuis l'anglais.</p>
+  const tgl = CS.mode==="liste" ? `<div class="tools">${viewToggle("c-cards","c-compact",state.ccompact)}</div>` : "";
+  const head = `<h2>Vocabulaire</h2>${vsubBar()}
+  <h3 style="margin:12px 0 0;font:400 1.15rem var(--f-display)">Collocations</h3>
+  <div class="toolbar" style="margin-top:4px"><p class="sub" style="margin:0">${all.length} associations de mots, avec le piège de traduction depuis l'anglais.</p>${tgl}</div>
   <div class="row" style="margin-bottom:12px;align-items:flex-end">
     <div class="row" role="group" aria-label="Affichage">
       ${[["cartes","Cartes"],["liste","Liste"],["quiz","Quiz"]].map(([k,l])=>`<button class="btn" data-cmode="${k}" style="padding:6px 12px;${CS.mode===k?'border-color:var(--encre);color:var(--encre)':''}">${l}</button>`).join("")}
@@ -2552,7 +2587,9 @@ function renderColloc(){
     <span class="counter">${known} / ${all.length} acquises</span>
   </div>`;
   const bind = () => {
-    document.getElementById("c-back").onclick=()=>{ state.vhome=true; state.themeV="all"; renderVocab(); window.scrollTo(0,0); };
+    const c1=document.getElementById("c-cards"); if(c1) c1.onclick=()=>{ state.ccompact=false; store.set("ccompact",false); renderColloc(); };
+    const c2=document.getElementById("c-compact"); if(c2) c2.onclick=()=>{ state.ccompact=true; store.set("ccompact",true); renderColloc(); };
+    bindVsub();
     view.querySelectorAll("[data-cmode]").forEach(b=>b.onclick=()=>{ CS.mode=b.dataset.cmode; CS.flipped=false; renderColloc(); });
   };
   const trap = c => `<p class="trap"><b>Piège :</b> ${c.piege}</p>`;
@@ -2563,11 +2600,18 @@ function renderColloc(){
   if(CS.mode==="quiz"){ renderCQuiz(head, all, bind); return; }
 
   if(CS.mode==="liste"){
-    view.innerHTML = head + `<div class="stack">${all.map(c=>`
-      <div class="sheet" style="padding-block:12px">${meta(c)}
-        <b style="font:400 1.1rem var(--f-display)">${c.colloc}</b>${c.en?` <span class="note">· EN : ${c.en}</span>`:""}
-        <p style="margin:2px 0">${c.sens}</p><p class="example note" style="margin:0">« ${c.ex} »</p>${trap(c)}
-      </div>`).join("")}</div>`;
+    if(state.ccompact){
+      view.innerHTML = head + `<div class="clist">${all.map(c=>`<details class="crow">
+        <summary><span class="chip">${c.level}</span><span class="cname">${c.colloc}</span>${CS.known[c.id]?knownChip:""}</summary>
+        <div class="cbody"><p class="eyebrow" style="margin:0 0 4px">${c.pos} · ${c.reg}${c.en?" · EN : "+c.en:""}</p><p style="margin:0 0 6px">${c.sens}</p><p class="example note" style="margin:0">« ${c.ex} »</p>${trap(c)}</div>
+      </details>`).join("")}</div>`;
+    } else {
+      view.innerHTML = head + `<div class="stack">${all.map(c=>`
+        <div class="sheet" style="padding-block:12px">${meta(c)}
+          <b style="font:400 1.1rem var(--f-display)">${c.colloc}</b>${c.en?` <span class="note">· EN : ${c.en}</span>`:""}
+          <p style="margin:2px 0">${c.sens}</p><p class="example note" style="margin:0">« ${c.ex} »</p>${trap(c)}
+        </div>`).join("")}</div>`;
+    }
     bind(); return;
   }
 
